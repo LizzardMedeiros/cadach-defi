@@ -2,14 +2,18 @@ import { ethers } from "ethers";
 
 const ABI = {
   STRATEGY: [
-    "function getApy() public view returns (uint128)",
-    "function locked(address) public view returns (uint40,uint256,uint256,uint256)",
-    "function erc20Token() public view returns (address)",
-    "function withdraw(uint256) public",
-    "function deposit(uint256) public",
-    "function getBalance() public view returns (uint256)",
-    "function getTotalAllocated() public view returns (uint256)",
-    "function investorCounter() public view returns (uint256)",
+    "function erc20Token() public view returns (address)", // Token base (USDT, wBTC, ETH...)
+    "function getApy() public view returns (uint128)", // Rendimento estimado ao ano (apy)
+    "function locked(address) public view returns (uint40,uint256,uint256,uint256)", // Cofre do cliente (investedAt, quotaAmount, applied, feeGenerated)
+    "function withdraw(uint256) public", // Saca o principal e os rendimentos se tiver
+    "function withdrawYields() public", // Saca os rendimentos
+    "function getYields(address) public view returns (uint256)", // Total de rendimentos disponíveis
+    "function getYieldsLogs() public", // Total de rendimentos disponíveis (logs)
+    "function deposit(uint256) public", // Deposita fundos no grupo
+    "function getBalance() public view returns (uint256)", // Pega o saldo
+    "function getTotalAllocated() public view returns (uint256)", // Pega o total alocado no grupo
+    "function investorCounter() public view returns (uint256)", // número de carteiras da pool
+    "event Log(uint256 ajustedAmount, uint256 applied)",
   ],
   ERC20: [
     "function approve(address, uint256) public",
@@ -25,6 +29,13 @@ const NETWORK_CONFIG = {
   nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
   blockExplorerUrls: ["https://arbiscan.io/"],
 };
+/* const NETWORK_CONFIG = {
+  chainId: "0x539", // 42161 em decimal
+  chainName: "Local ETH",
+  rpcUrls: ["http://localhost:8545"],
+  nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+  blockExplorerUrls: ["https://arbiscan.io/"],
+}; */
 
 export default function UseEthereum(setSigner = () => null) {
   async function connect(wallet) {
@@ -63,7 +74,7 @@ export default function UseEthereum(setSigner = () => null) {
     const abi = ABI[contract];
     const provider = new ethers.BrowserProvider(window.ethereum);
     const c = new ethers.Contract(address, abi, provider);
-    return await c[fn](...params);
+    return await c[fn](...params).catch(console.error)
   }
 
   async function send(signer, contractAddress, fn, contract = 'ERC20', ...params) {
@@ -72,7 +83,7 @@ export default function UseEthereum(setSigner = () => null) {
     if (!(contract in ABI)) throw new Error('Invalid contract!');
     const abi = ABI[contract];
     const c = new ethers.Contract(contractAddress, abi, signer);
-    return await c[fn](...params);
+    return await c[fn](...params, { gasLimit: 500_000 });
   }
 
   return [

@@ -8,7 +8,8 @@ import useEthereum from '@/hooks/use-ethereum'
 
 const strategyList = [
   [
-    '0x46455684E06A811A4BDeb93D3acb421EFe8e4C97',
+    '0x4cdBD464A1fC138F8a2741DFEf57153934bcbeBd', // Mock
+    // '0x46455684E06A811A4BDeb93D3acb421EFe8e4C97',
     'Estratégia Blindando meu $',
     'Baixo Risco',
     'green',
@@ -61,8 +62,10 @@ export default function FeaturedProducts({ signer }) {
 
   const handleProductClick = async (productId) => {
     const unselect = selectedProduct === productId;
+
     if (!unselect && signer?.address) {
       const erc20Addr = await call(productId, 'erc20Token', 'STRATEGY');
+      const yields = await call(productId, 'getYields', 'STRATEGY', signer.address);
       const decimals = await call(erc20Addr, 'decimals', 'ERC20');
       const available = await call(erc20Addr, 'balanceOf', 'ERC20', signer.address);
       const balance = await send(signer, productId, 'getBalance', 'STRATEGY');
@@ -71,6 +74,7 @@ export default function FeaturedProducts({ signer }) {
         available: Number(ethers.formatUnits(available, decimals)).toFixed(2), // Total Aplicado
         balance: Number(ethers.formatUnits(balance, decimals)).toFixed(2), // Disponível para resgate
         gas: Number(ethers.formatEther(signer.balanceWei)).toFixed(2),
+        yield: Number(ethers.formatUnits(yields, decimals)).toFixed(2),
       })
     }
     setSelectedProduct(unselect ? null : productId);
@@ -85,6 +89,7 @@ export default function FeaturedProducts({ signer }) {
     if (!selectedProduct || amount <= 0) return;
     const erc20Addr = await call(selectedProduct, 'erc20Token', 'STRATEGY');
     const decimals = await call(erc20Addr, 'decimals', 'ERC20');
+
     const parsedAmount = ethers.parseUnits(String(amount).replace(',', '.'), decimals);
     const balance = Number(ethers.formatUnits(
       await call(erc20Addr, 'balanceOf', 'ERC20', signer.address), decimals,
@@ -239,12 +244,12 @@ export default function FeaturedProducts({ signer }) {
 
                       <div className="bg-white rounded-lg p-4 text-center">
                         <div className="flex items-center justify-center space-x-2 mb-1">
-                          <Users className="w-4 h-4 text-gray-600" />
+                          <DollarSign className="w-4 h-4 text-gray-600" />
                           <span className="text-lg font-bold text-gray-900">
-                            {productDetails.gas || 0} ETH
+                            {productDetails.yield || 0}
                           </span>
                         </div>
-                        <span className="text-sm text-gray-500">Gas disponível</span>
+                        <span className="text-sm text-gray-500">Recompensas</span>
                       </div>
 
                       <div className="bg-white rounded-lg p-4 text-center">
@@ -263,13 +268,21 @@ export default function FeaturedProducts({ signer }) {
                       <div />
                       <Button
                         className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
-                        // disabled={!productDetails.amount}
                         onClick={() => setModal('sell')}
                       >
                         <DollarSign className="w-4 h-4 mr-2" />
                         Resgatar patrimônio
                       </Button>
-                      <div />
+
+                      <Button
+                        className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
+                        onClick={() => {
+                          send(signer, product.id, 'withdrawYields', 'STRATEGY')
+                        }}
+                      >
+                        <DollarSign className="w-4 h-4 mr-2" />
+                        Resgatar ganhos
+                      </Button>
                     </div>
 
                     <div className="space-y-6">
