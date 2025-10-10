@@ -14,7 +14,14 @@ export default function Hero() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-32">
         <div className="text-center max-w-4xl mx-auto">
           {/* Main heading */}
-          <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-gray-900 mb-6">
+          <h1 className="  
+            text-4xl 
+            sm:text-6xl 
+            max-[550px]:text-3xl 
+            font-bold 
+            tracking-tight 
+            text-gray-900 
+            mb-6">
             Invista em{' '}
             <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               DeFi
@@ -45,7 +52,7 @@ export default function Hero() {
           </div>
           
           {/* CTA Button */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <div className="flex flex-col  min-[470px]:flex-row gap-4 justify-center items-center">
             <Button 
               size="lg" 
               className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-6 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
@@ -67,22 +74,25 @@ export default function Hero() {
           {/* Trust indicators */}
           <div className="mt-16 pt-8 border-t border-gray-200">
             <p className="text-sm text-gray-500 mb-4">Confiado por mais de 2.000 investidores</p>
-            <div className="flex justify-center items-center space-x-8 opacity-60">
-              <div className="text-2xl font-bold text-gray-400">R$ 4.3M+</div>
-              <div className="w-1 h-8 bg-gray-300"></div>
-              <div className="text-sm text-gray-400">Total investido</div>
-              <div className="w-1 h-8 bg-gray-300"></div>
-              <div className="text-2xl font-bold text-gray-400">2.1k+</div>
-              <div className="text-sm text-gray-400">Investidores ativos</div>
+            <div className="flex flex-wrap justify-center items-center space-x-8 opacity-60">
+              <div className="flex flex-wrap justify-center items-center space-x-8 ">
+                <div className="text-2xl font-bold text-gray-400">R$ 4.3M+</div>
+                <div className="text-sm text-gray-400">Total investido</div>
+              </div>
+              <div className="flex flex-wrap justify-center items-center space-x-8 ">
+                <div className="w-1 h-8 bg-gray-300 max-[558px]:hidden"></div>
+                <div className="text-2xl font-bold text-gray-400">2.1k+</div>
+                <div className="text-sm text-gray-400">Investidores ativos</div>
+              </div>
             </div>
           </div>
         </div>
       </div>
       
-      {/* Floating elements */}
-      <div className="absolute top-20 left-10 w-20 h-20 bg-blue-200 rounded-full opacity-20 animate-pulse"></div>
-      <div className="absolute bottom-20 right-10 w-32 h-32 bg-purple-200 rounded-full opacity-20 animate-pulse delay-1000"></div>
-      <div className="absolute top-1/2 left-1/4 w-16 h-16 bg-green-200 rounded-full opacity-20 animate-pulse delay-500"></div>
+      {/* Floating elements PERGUNTAR: Bolas desaparecem no mobile ps: muita informacao */}
+      <div className="hidden sm:block absolute top-20 left-10 w-20 h-20 bg-blue-200 rounded-full opacity-20 animate-pulse"></div>
+      <div className="hidden sm:block absolute bottom-20 right-10 w-32 h-32 bg-purple-200 rounded-full opacity-20 animate-pulse delay-1000"></div>
+      <div className="hidden sm:block absolute top-1/2 left-1/4 w-16 h-16 bg-green-200 rounded-full opacity-20 animate-pulse delay-500"></div>
     </section>
   )
 }
