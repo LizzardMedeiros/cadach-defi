@@ -57,7 +57,7 @@ export default function Content({
             );
           })()}
         </div>
-        <h3 className="text-2xl font-bold text-gray-900 mb-2">
+        <h3 className="text-lg font-bold text-gray-900 mb-2 sm:text-2xl">
           {isBuyMode ? 'Investir em' : 'Vender'} {product?.name}
         </h3>
         <p className="text-gray-600">
