@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Wallet, Menu, X } from 'lucide-react'
 import useEthereum from '@/hooks/use-ethereum';
+import { Link, NavLink } from 'react-router-dom'
 
 export default function Header({ setSigner = () => null, signer }) {
   const [isConnected, setIsConnected] = useState(false)
@@ -21,7 +22,7 @@ export default function Header({ setSigner = () => null, signer }) {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between gap-2.5">
             {/* Logo */}
-            <div className="flex items-center">
+            <Link to="/" className="flex items-center">
               <h1 className="  
                   text-xl 
                   max-[470px]:text-xl 
@@ -29,10 +30,18 @@ export default function Header({ setSigner = () => null, signer }) {
               >
                 Cadach Finance
               </h1>
-            </div>
+            </Link>
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-8">
+            <NavLink
+              to="/tokens"
+              className={({isActive}) =>
+                `transition-colors ${isActive ? 'text-gray-900 underline' : 'text-gray-600 hover:text-gray-900'}`
+              }
+            >
+              Tokens
+            </NavLink>
               <a href="#estrategias" className="text-gray-600 hover:text-gray-900 transition-colors">
                 Estratégias
               </a>
@@ -77,6 +86,11 @@ export default function Header({ setSigner = () => null, signer }) {
           {mobileMenuOpen && (
             <div className="md:hidden border-t py-4">
               <nav className="flex flex-col space-y-4">
+                <Link  to="/tokens" className={({isActive}) =>
+                  `transition-colors ${isActive ? 'text-gray-900 underline' : 'text-gray-600 hover:text-gray-900'}`
+                }>
+                  Tokens
+                </Link>
                 <a href="#estrategias" className="text-gray-600 hover:text-gray-900 transition-colors">
                   Estratégias
                 </a>
