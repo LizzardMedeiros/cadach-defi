@@ -10,7 +10,7 @@ const strategyList = [
   [
     '0x4cdBD464A1fC138F8a2741DFEf57153934bcbeBd', // Mock
     // '0x46455684E06A811A4BDeb93D3acb421EFe8e4C97',
-    'Estratégia Blindando meu $',
+    'Estratégia - Dolarizando meu investimento',
     'Baixo Risco',
     'green',
     Shield,
@@ -72,7 +72,7 @@ export default function FeaturedProducts({ signer }) {
 
       setProductDetails({
         available: Number(ethers.formatUnits(available, decimals)).toFixed(2), // Total Aplicado
-        balance: Number(ethers.formatUnits(balance, decimals)).toFixed(2), // Disponível para resgate
+        balance: Number(ethers.formatUnits(balance, decimals)).toFixed(5), // Disponível para resgate
         gas: Number(ethers.formatEther(signer.balanceWei)).toFixed(2),
         yield: Number(ethers.formatUnits(yields, decimals)).toFixed(2),
       })
