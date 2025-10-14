@@ -11,7 +11,7 @@ export default function Hero() {
       {/* Background decoration */}
       <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10"></div>
       
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-32">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-20">
         <div className="text-center max-w-4xl mx-auto">
           {/* Main heading */}
           <h1 className="  

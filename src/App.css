@@ -114,6 +114,28 @@
   * {
     @apply border-border outline-ring/50;
   }
+
+  /* scrollbar personalizado */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px; /* grossura menor */
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+    margin-top: 10px; /* começa 10 px abaixo do topo */
+    margin-bottom: 10px; /* termina 10 px acima do fim */
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: color-mix(in oklch, var(--muted-foreground) 60%, transparent);
+    border-radius: 9999px; /* bem arredondado */
+  }
+
+  /* dark mode */
+  .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: color-mix(in oklch, var(--muted-foreground) 75%, transparent);
+  }
+
   body {
     @apply bg-background text-foreground;
   }

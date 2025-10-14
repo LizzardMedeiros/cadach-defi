@@ -38,7 +38,7 @@ export default function Content({
   };
 
   return (
-    <div className="p-6">
+    <div className="p-6 max-[470px]:p-3">
       <div className="text-center mb-6">
         <div className="flex items-center justify-center mb-4">
           {(() => {
@@ -96,7 +96,7 @@ export default function Content({
               min="0"
               max={!isBuyMode ? userBalance : undefined}
               placeholder="0.00"
-              className="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
+              className="block w-full pl-10 pr-14 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
               onChange={(ev) => setAmount(Number(ev.target.value))}
               required
             />
@@ -154,21 +154,21 @@ export default function Content({
 
         <div className="bg-gray-50 rounded-lg p-4">
           <h4 className="font-medium text-gray-900 mb-3">Sobre o Ativo</h4>
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between">
+          <div className="space-y-2 text-sm max-[400px]:text-xs">
+            <div className="flex justify-between items-center">
               <span className="text-gray-600">Estratégia:</span>
-              <span className="font-medium text-gray-900">
+              <span className="font-medium text-gray-900 max-[400px]:max-w-[50%] text-right">
                 {product?.name}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Rendimento esperado:</span>
-              <span className="font-medium text-green-600">
+              <span className="text-gray-600 max-w-[50%]">Rendimento esperado:</span>
+              <span className="font-medium text-green-600 max-[400px]:max-w-[50%]">
                 {product?.currentReturn}% ao ano
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Categoria de risco:</span>
+              <span className="text-gray-600 max-w-[50%]">Categoria de risco:</span>
               <span className={`font-medium ${
                 product?.categoryColor === 'green' ? 'text-green-600' :
                 product?.categoryColor === 'red' ? 'text-red-600' :
@@ -180,7 +180,7 @@ export default function Content({
           </div>
         </div>
 
-        <div className="flex space-x-3 pt-4">
+        <div className="flex space-x-3 pt-4 flex-wrap gap-3">
           <Button
             type="button"
             variant="outline"

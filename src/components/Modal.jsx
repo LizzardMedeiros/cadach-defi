@@ -12,7 +12,7 @@ export default function Modal({ isOpen, onClose, onOpen, children }) {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/60 z-50 p-4">
-      <div className="bg-white rounded-xl shadow-lg relative max-w-lg w-full max-h-[90vh] flex flex-col">
+      <div className=" bg-white rounded-xl shadow-lg relative max-w-lg w-full max-h-[90vh] flex flex-col p-1">
         {/* Close button */}
         <button
           onClick={onClose}
@@ -22,7 +22,7 @@ export default function Modal({ isOpen, onClose, onOpen, children }) {
         </button>
         
         {/* Scrollable content area */}
-        <div className="overflow-y-auto flex-1">
+        <div className="overflow-y-auto flex-1 custom-scrollbar">
           {children}
         </div>
       </div>
