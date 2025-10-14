@@ -34,6 +34,7 @@ export default function Header({ setSigner = () => null, signer }) {
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-8">
+            {/* Restirado pra build
             <NavLink
               to="/tokens"
               className={({isActive}) =>
@@ -42,6 +43,7 @@ export default function Header({ setSigner = () => null, signer }) {
             >
               Tokens
             </NavLink>
+            */}
               <a href="#estrategias" className="text-gray-600 hover:text-gray-900 transition-colors">
                 Estratégias
               </a>
@@ -86,11 +88,13 @@ export default function Header({ setSigner = () => null, signer }) {
           {mobileMenuOpen && (
             <div className="md:hidden border-t py-4">
               <nav className="flex flex-col space-y-4">
+                {/* Retirado pra build
                 <Link  to="/tokens" className={({isActive}) =>
                   `transition-colors ${isActive ? 'text-gray-900 underline' : 'text-gray-600 hover:text-gray-900'}`
                 }>
                   Tokens
                 </Link>
+                */}
                 <a href="#estrategias" className="text-gray-600 hover:text-gray-900 transition-colors">
                   Estratégias
                 </a>
