@@ -129,7 +129,7 @@ export default function RiskCategories({ setStrategyFilter }) {
                     onClick={(e) => {
                       e.stopPropagation();
                       setStrategyFilter(category.risco);
-                      const el = document.getElementById("strategies");
+                      const el = document.getElementById("table");
                       if (el) el.scrollIntoView({ behavior: "smooth" });
                     }}
                   >

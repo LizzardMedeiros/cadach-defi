@@ -9,8 +9,8 @@ export default function Home({ signer }) {
   return (
     <>
       <Hero />
-      <InvestmentTable pageSize={10} strategyFilter={strategyFilter} />
       <RiskCategories setStrategyFilter={setStrategyFilter} />
+      <InvestmentTable pageSize={10} strategyFilter={strategyFilter} />
       <FeaturedProducts signer={signer} />
     </>
   )

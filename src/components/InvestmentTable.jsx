@@ -203,7 +203,7 @@ export default function InvestmentTable({
   };
 
   return (
-    <div className="mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-20">
+    <div className="mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-20" id="table">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-3">
         <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4 text-center w-full">
           Estratégias
