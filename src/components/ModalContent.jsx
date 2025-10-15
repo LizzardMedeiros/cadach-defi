@@ -17,7 +17,7 @@ export default function Content({
   error,
   setError,
 }) {
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState(0.00);
 
   
   const isBuyMode = mode === 'buy';
@@ -79,7 +79,9 @@ export default function Content({
             {!isBuyMode && (
               <button
                 type="button"
-                onClick={() => setAmount(userBalance)}
+                onClick={() => {
+                  setAmount(userBalance)
+                }}
                 className="text-xs font-medium text-blue-600 hover:text-blue-700"
               >
                 Saldo: {userBalance} USDT
@@ -98,6 +100,7 @@ export default function Content({
               min="0"
               onFocus={() => setError(null)}
               max={!isBuyMode ? userBalance : undefined}
+              value={amount}
               placeholder="0.00"
               className="block w-full pl-10 pr-14 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
               onChange={(ev) => setAmount(Number(ev.target.value))}
