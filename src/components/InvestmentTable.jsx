@@ -255,7 +255,7 @@ export default function InvestmentTable({
                     onClick={() => onInvest(r)}
                     className="text-sm font-medium text-purple-600 hover:text-purple-500 transition-colors"
                   >
-                    Investir
+                    Detalhes
                   </button>
                 </div>
               </div>
