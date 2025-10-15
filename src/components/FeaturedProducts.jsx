@@ -74,7 +74,7 @@ export default function FeaturedProducts({ signer }) {
         available: Number(ethers.formatUnits(available, decimals)).toFixed(2), // Total Aplicado
         balance: Number(ethers.formatUnits(balance, decimals)).toFixed(5), // Disponível para resgate
         gas: Number(ethers.formatEther(signer.balanceWei)).toFixed(2),
-        yield: Number(ethers.formatUnits(yields, decimals)).toFixed(2),
+        yield: Number(ethers.formatUnits(yields, decimals)).toFixed(5),
       })
     }
     setSelectedProduct(unselect ? null : productId);
@@ -86,7 +86,6 @@ export default function FeaturedProducts({ signer }) {
   }
 
   const handleSubmit = async ({ amount, mode }) => {
-    console.log({ amount, mode });
     if (!selectedProduct || amount <= 0) return;
     const erc20Addr = await call(selectedProduct, 'erc20Token', 'STRATEGY');
     const decimals = await call(erc20Addr, 'decimals', 'ERC20');
