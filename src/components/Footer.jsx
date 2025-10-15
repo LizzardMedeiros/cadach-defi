@@ -1,4 +1,4 @@
-import { Mail, MessageCircle, FileText, Shield, Globe, Twitter, Github, Linkedin } from 'lucide-react'
+import { Mail, MessageCircle, FileText, Shield, Globe, Twitter, Github, Linkedin, Instagram } from 'lucide-react'
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
@@ -13,15 +13,32 @@ export default function Footer() {
               Cadach Finance
             </h3>
             <p className="text-gray-400 mb-6 leading-relaxed max-w-md">
-              A primeira plataforma DeFi 100% em português. Democratizamos o acesso a investimentos 
-              descentralizados com segurança, transparência e simplicidade.
+              Aqui você encontra estratégias profissionais prontas para usar, automação que protege seu capital e suporte prático para começar hoje no DEFI
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                <Twitter className="w-5 h-5" />
+            <a href="https://x.com/cadachd?s=21" 
+                target="_blank"
+                rel="noopener noreferrer"className="text-gray-400 hover:text-white transition-colors" aria-label="X (antigo Twitter)"
+            >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                  className="w-5 h-5"
+                >
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.508 11.24H15.12l-5.18-6.774L3.972 21.75H.664l7.73-8.845L.254 2.25h6.594l4.704 6.19L18.244 2.25zM17.1 19.35h1.832L7.05 4.78H5.09L17.1 19.35z" />
+                </svg>
               </a>
               <a href="#" className="text-gray-400 hover:text-white transition-colors">
                 <Github className="w-5 h-5" />
+              </a>
+              <a href="https://www.instagram.com/cadach.defi?igsh=OXZhMzczZWE0ZHZj&utm_source=qr"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-white transition-colors"
+                aria-label="Instagram"
+              >
+                <Instagram className="w-5 h-5" />
               </a>
               <a href="#" className="text-gray-400 hover:text-white transition-colors">
                 <Linkedin className="w-5 h-5" />
