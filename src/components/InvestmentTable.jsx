@@ -209,73 +209,73 @@ export default function InvestmentTable({
           Estratégias
         </h2>
       </div>
-<div className="overflow-x-auto">
-      <div
-        role="table"
-        aria-label="Tabela de estratégias"
-        className="min-w-[720px] rounded-xl border border-gray-200 shadow-sm overflow-hidden bg-gray-100"
-      >
-        {/* Cabeçalho */}
-        <div role="rowgroup" className="bg-gray-200">
-          <div role="row" className={`${gridColsClass} text-left`}>
-            {columns.map((c) => (
-              <HeaderCell key={c.id} id={c.id}>
-                {c.label}
-              </HeaderCell>
-            ))}
+      <div className="overflow-x-auto mb-3  rounded-xl border border-gray-200 shadow-sm overflow-hidden bg-gray-100 ">
+        <div
+          role="table"
+          aria-label="Tabela de estratégias"
+          className="min-w-[720px]"
+        >
+          {/* Cabeçalho */}
+          <div role="rowgroup" className="bg-gray-200">
+            <div role="row" className={`${gridColsClass} text-left`}>
+              {columns.map((c) => (
+                <HeaderCell key={c.id} id={c.id}>
+                  {c.label}
+                </HeaderCell>
+              ))}
+            </div>
+          </div>
+
+          {/* Corpo */}
+          <div role="rowgroup" className="divide-y divide-gray-200">
+            {pageRows.length > 0 ? (
+              pageRows.map((r, idx) => (
+                <div
+                  key={idx}
+                  role="row"
+                  className={`${gridColsClass} items-center hover:bg-gray-200`}
+                >
+                  <div role="cell" className="px-4 py-3 font-medium text-gray-800">
+                    {r.estrategia}
+                  </div>
+                  <div role="cell" className="px-4 py-3 tabular-nums">
+                    {toBRL(r.total)}
+                  </div>
+                  <div role="cell" className="px-4 py-3 tabular-nums">
+                    {Number(r.apy).toFixed(2)}%
+                  </div>
+                  <div role="cell" className="px-4 py-3 text-gray-800">
+                    {r.criadoPor}
+                  </div>
+                  <div role="cell" className="px-4 py-3">
+                    <RiskBars value={r.risco} />
+                  </div>
+                  <div role="cell" className="px-4 py-3">
+                    <button
+                      onClick={() => onInvest(r)}
+                      className="text-sm font-medium text-purple-600 hover:text-purple-500 transition-colors"
+                    >
+                      Detalhes
+                    </button>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div role="row" className={`${gridColsClass}`}>
+                <div
+                  role="cell"
+                  className="px-4 py-10 text-center text-gray-500 col-span-6"
+                >
+                  Nenhum registro.
+                </div>
+              </div>
+            )}
           </div>
         </div>
-
-        {/* Corpo */}
-        <div role="rowgroup" className="divide-y divide-gray-200">
-          {pageRows.length > 0 ? (
-            pageRows.map((r, idx) => (
-              <div
-                key={idx}
-                role="row"
-                className={`${gridColsClass} items-center hover:bg-gray-200`}
-              >
-                <div role="cell" className="px-4 py-3 font-medium text-gray-800">
-                  {r.estrategia}
-                </div>
-                <div role="cell" className="px-4 py-3 tabular-nums">
-                  {toBRL(r.total)}
-                </div>
-                <div role="cell" className="px-4 py-3 tabular-nums">
-                  {Number(r.apy).toFixed(2)}%
-                </div>
-                <div role="cell" className="px-4 py-3 text-gray-800">
-                  {r.criadoPor}
-                </div>
-                <div role="cell" className="px-4 py-3">
-                  <RiskBars value={r.risco} />
-                </div>
-                <div role="cell" className="px-4 py-3">
-                  <button
-                    onClick={() => onInvest(r)}
-                    className="text-sm font-medium text-purple-600 hover:text-purple-500 transition-colors"
-                  >
-                    Detalhes
-                  </button>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div role="row" className={`${gridColsClass}`}>
-              <div
-                role="cell"
-                className="px-4 py-10 text-center text-gray-500 col-span-6"
-              >
-                Nenhum registro.
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
       </div>
 
       {/* Paginação */}
-      <div className="mt-4 flex flex-col items-center justify-between gap-3 sm:flex-row">
+      <div className="mt-2 flex items-center justify-between gap-3 flex-row">
         <p className="text-sm text-gray-600">
           Página <span className="font-medium">{page}</span> de{" "}
           <span className="font-medium">{totalPages}</span> /{" "}
@@ -293,14 +293,14 @@ export default function InvestmentTable({
           <button
             onClick={goPrev}
             disabled={page === 1}
-            className="rounded-md border border-gray-300 px-3 py-1.5 text-sm disabled:opacity-50"
+            className="hidden rounded-md border border-gray-300 px-3 py-1.5 text-sm disabled:opacity-50 sm:inline-flex"
           >
             Anterior
           </button>
           <button
             onClick={goNext}
             disabled={page === totalPages}
-            className="rounded-md border border-gray-300 px-3 py-1.5 text-sm disabled:opacity-50"
+            className="hidden rounded-md border border-gray-300 px-3 py-1.5 text-sm disabled:opacity-50 sm:inline-flex"
           >
             Próxima
           </button>
