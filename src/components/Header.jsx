@@ -4,16 +4,22 @@ import { Wallet, Menu, X } from 'lucide-react'
 import useEthereum from '@/hooks/use-ethereum';
 import { Link, NavLink } from 'react-router-dom'
 import {NETWORK_CONFIG} from '@/hooks/use-ethereum';
+import Modal from './Modal';
+import WalletRequired from './WalletRequired';
 
 export default function Header({ setSigner = () => null, signer }) {
   const [isConnected, setIsConnected] = useState(false)
   const [showWalletModal, setShowWalletModal] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [showWalletRequiredModal, setShowWalletRequiredModal] = useState(false);
   const [connect] = useEthereum(setSigner);
 
   useEffect(() => {
     const saved = localStorage.getItem("cadash")
-    if (!saved) return
+    if (!saved) {
+      setShowWalletRequiredModal(true);
+      return;
+    }
     try {
       const parsed = JSON.parse(saved)
       if (parsed?.wallet) {
@@ -40,13 +46,14 @@ export default function Header({ setSigner = () => null, signer }) {
     <>
       <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between gap-2.5">
+          <div className="flex h-16 items-center justify-between gap-2">
             {/* Logo */}
             <Link to="/" className="flex items-center">
               <h1 className="  
-                  text-xl 
+                  text-2xl
                   max-[470px]:text-xl 
-                  min-[470px]:text-2xl  font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+                  max-[400px]:text-lg
+                  font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
               >
                 Cadach Finance
               </h1>
@@ -64,7 +71,6 @@ export default function Header({ setSigner = () => null, signer }) {
             >
               Tokens
             </NavLink>
-
               <a href="#estrategias" className="text-gray-600 hover:text-gray-900 transition-colors">
                 Estratégias
               </a>
@@ -129,6 +135,11 @@ export default function Header({ setSigner = () => null, signer }) {
         </div>
       </header>
 
+      {/* Modal de warning avisando q a carteira deve estar conectada */}
+      <Modal isOpen={!!showWalletRequiredModal} onClose={() => {setShowWalletRequiredModal(false)}}>
+          <WalletRequired />
+      </Modal>
+
       {/* Wallet Connection Modal */}
       {showWalletModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
@@ -143,6 +154,7 @@ export default function Header({ setSigner = () => null, signer }) {
                 <X className="w-4 h-4" />
               </Button>
             </div>
+    
             
             <div className="space-y-3">
               <Button
