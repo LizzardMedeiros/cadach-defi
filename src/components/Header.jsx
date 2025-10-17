@@ -86,12 +86,17 @@ export default function Header({ setSigner = () => null, signer }) {
             <div className="flex items-center space-x-4">
               <img src={handleNetworkSource()} alt="Logo" className="h-6 w-6 mr-6"/>
               {!isConnected ? (
-                <Button 
+                <Button
                   onClick={() => setShowWalletModal(true)}
-                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                  className="
+                    bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700
+                    px-3 py-1.5 text-sm
+                    sm:px-4 sm:py-2 sm:text-base
+                  "
                 >
                   <Wallet className="w-4 h-4 mr-2" />
-                  Conectar Carteira
+                  <span className="max-[450px]:hidden">Conectar Carteira</span>
+                  <span className="hidden max-[450px]:inline">Conectar</span>
                 </Button>
               ) : (
                 <button className="flex items-center space-x-2" onClick={() => setShowWalletModal(true)}>
