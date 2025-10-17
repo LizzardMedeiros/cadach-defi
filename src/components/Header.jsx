@@ -12,6 +12,19 @@ export default function Header({ setSigner = () => null, signer }) {
   const [connect] = useEthereum(setSigner);
 
   useEffect(() => {
+    const saved = localStorage.getItem("cadash")
+    if (!saved) return
+    try {
+      const parsed = JSON.parse(saved)
+      if (parsed?.wallet) {
+        connect(parsed.wallet) // reconecta automaticamente
+      }
+    } catch (err) {
+      console.error("Erro ao ler localStorage:", err)
+    }
+  }, []) // Persistencia da conexão da carteira com localStorage
+
+  useEffect(() => {
     if (!signer) return;
     setIsConnected(true)
     setShowWalletModal(false)
@@ -75,10 +88,10 @@ export default function Header({ setSigner = () => null, signer }) {
                   Conectar Carteira
                 </Button>
               ) : (
-                <div className="flex items-center space-x-2">
+                <button className="flex items-center space-x-2" onClick={() => setShowWalletModal(true)}>
                   <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                   <span className="text-sm text-gray-600">{`${signer.address.substr(0,5)}...${signer.address.substr(-5)}`}</span>
-                </div>
+                </button>
               )}
 
               {/* Mobile Menu Button */}

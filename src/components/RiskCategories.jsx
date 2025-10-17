@@ -61,7 +61,7 @@ export default function RiskCategories({ setStrategyFilter }) {
       ]
     },
     {
-      id: 'agressivo',
+      id: 'agresddsivo',
       name: 'Agressivo',
       icon: Rocket,
       color: 'red',

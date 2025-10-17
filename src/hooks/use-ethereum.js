@@ -109,6 +109,9 @@ export default function UseEthereum(setSigner = () => null) {
     const s = await provider.getSigner();
     s.balanceWei = await provider.getBalance(s.address);
     setSigner(s);
+    localStorage.setItem("cadash", JSON.stringify({
+      wallet: wallet,
+    }));
   }
 
   async function call(address, fn, contract = 'ERC20', ...params) {
