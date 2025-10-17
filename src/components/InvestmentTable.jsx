@@ -209,11 +209,11 @@ export default function InvestmentTable({
           Estratégias
         </h2>
       </div>
-
+<div className="overflow-x-auto">
       <div
         role="table"
         aria-label="Tabela de estratégias"
-        className="rounded-xl border border-gray-200 shadow-sm overflow-hidden bg-gray-100"
+        className="min-w-[720px] rounded-xl border border-gray-200 shadow-sm overflow-hidden bg-gray-100"
       >
         {/* Cabeçalho */}
         <div role="rowgroup" className="bg-gray-200">
@@ -271,6 +271,7 @@ export default function InvestmentTable({
             </div>
           )}
         </div>
+      </div>
       </div>
 
       {/* Paginação */}
