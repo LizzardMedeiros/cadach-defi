@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Wallet, Menu, X } from 'lucide-react'
 import useEthereum from '@/hooks/use-ethereum';
 import { Link, NavLink } from 'react-router-dom'
+import {NETWORK_CONFIG} from '@/hooks/use-ethereum';
 
 export default function Header({ setSigner = () => null, signer }) {
   const [isConnected, setIsConnected] = useState(false)
@@ -15,6 +16,12 @@ export default function Header({ setSigner = () => null, signer }) {
     setIsConnected(true)
     setShowWalletModal(false)
   }, [signer])
+
+  const handleNetworkSource = () => {
+    if (NETWORK_CONFIG.chainName.includes("Arbitrum")) {
+      return "../../public/logos/arbitrum.png"
+    }
+  }
 
   return (
     <>
@@ -32,18 +39,19 @@ export default function Header({ setSigner = () => null, signer }) {
               </h1>
             </Link>
 
+
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-8">
-            {/* Restirado pra build
+
             <NavLink
               to="/tokens"
-              className={({isActive}) =>
-                `transition-colors ${isActive ? 'text-gray-900 underline' : 'text-gray-600 hover:text-gray-900'}`
+              className={
+                `transition-colors text-gray-600 hover:text-gray-900`
               }
             >
               Tokens
             </NavLink>
-            */}
+
               <a href="#estrategias" className="text-gray-600 hover:text-gray-900 transition-colors">
                 Estratégias
               </a>
@@ -57,6 +65,7 @@ export default function Header({ setSigner = () => null, signer }) {
 
             {/* Connect Wallet Button */}
             <div className="flex items-center space-x-4">
+              <img src={handleNetworkSource()} alt="Logo" className="h-6 w-6 mr-6"/>
               {!isConnected ? (
                 <Button 
                   onClick={() => setShowWalletModal(true)}
@@ -88,13 +97,10 @@ export default function Header({ setSigner = () => null, signer }) {
           {mobileMenuOpen && (
             <div className="md:hidden border-t py-4">
               <nav className="flex flex-col space-y-4">
-                {/* Retirado pra build
-                <Link  to="/tokens" className={({isActive}) =>
-                  `transition-colors ${isActive ? 'text-gray-900 underline' : 'text-gray-600 hover:text-gray-900'}`
-                }>
+                <Link  to="/tokens" className="text-gray-600 hover:text-gray-900 transition-colors"
+                >
                   Tokens
                 </Link>
-                */}
                 <a href="#estrategias" className="text-gray-600 hover:text-gray-900 transition-colors">
                   Estratégias
                 </a>

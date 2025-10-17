@@ -24,7 +24,7 @@ const ABI = {
   ]
 }
 
-const NETWORK_CONFIG = {
+export const NETWORK_CONFIG = {
   chainId: "0xa4b1", // 42161 em decimal
   chainName: "Arbitrum One",
   rpcUrls: ["https://arb1.arbitrum.io/rpc"],
@@ -135,3 +135,4 @@ export default function UseEthereum(setSigner = () => null) {
     send,
   ]
 }
+

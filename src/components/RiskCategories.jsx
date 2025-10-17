@@ -59,6 +59,24 @@ export default function RiskCategories({ setStrategyFilter }) {
         'Estratégias avançadas de DeFi',
         'Maior volatilidade e potencial'
       ]
+    },
+    {
+      id: 'agressivo',
+      name: 'Agressivo',
+      icon: Rocket,
+      color: 'red',
+      risco: 4,
+      gradient: 'from-red-500 to-pink-600',
+      bgColor: 'bg-red-50',
+      borderColor: 'border-red-200',
+      textColor: 'text-red-700',
+      returnRange: '15-25%+',
+      description: 'Maior potencial de retorno para investidores experientes',
+      features: [
+        'Protocolos de alto rendimento',
+        'Estratégias avançadas de DeFi',
+        'Maior volatilidade e potencial'
+      ]
     }
   ]
 
