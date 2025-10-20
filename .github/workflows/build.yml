@@ -37,6 +37,7 @@ jobs:
           rm -rf .github .gitignore node_modules src assets public package.json package-lock.json
           mv dist/* .
           rm -rf dist
+          echo "defi.cadach.xyz" > CNAME
           git add .
           git commit -m "Deploy from commit $GITHUB_SHA"
           git push -f origin pages
