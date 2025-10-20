@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Wallet, Menu, X } from 'lucide-react'
 import useEthereum from '@/hooks/use-ethereum';
+import { Link, NavLink } from 'react-router-dom'
 
 export default function Header({ setSigner = () => null, signer }) {
   const [isConnected, setIsConnected] = useState(false)
@@ -19,16 +20,30 @@ export default function Header({ setSigner = () => null, signer }) {
     <>
       <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
+          <div className="flex h-16 items-center justify-between gap-2.5">
             {/* Logo */}
-            <div className="flex items-center">
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <Link to="/" className="flex items-center">
+              <h1 className="  
+                  text-xl 
+                  max-[470px]:text-xl 
+                  min-[470px]:text-2xl  font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+              >
                 Cadach Finance
               </h1>
-            </div>
+            </Link>
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-8">
+            {/* Restirado pra build
+            <NavLink
+              to="/tokens"
+              className={({isActive}) =>
+                `transition-colors ${isActive ? 'text-gray-900 underline' : 'text-gray-600 hover:text-gray-900'}`
+              }
+            >
+              Tokens
+            </NavLink>
+            */}
               <a href="#estrategias" className="text-gray-600 hover:text-gray-900 transition-colors">
                 Estratégias
               </a>
@@ -73,6 +88,13 @@ export default function Header({ setSigner = () => null, signer }) {
           {mobileMenuOpen && (
             <div className="md:hidden border-t py-4">
               <nav className="flex flex-col space-y-4">
+                {/* Retirado pra build
+                <Link  to="/tokens" className={({isActive}) =>
+                  `transition-colors ${isActive ? 'text-gray-900 underline' : 'text-gray-600 hover:text-gray-900'}`
+                }>
+                  Tokens
+                </Link>
+                */}
                 <a href="#estrategias" className="text-gray-600 hover:text-gray-900 transition-colors">
                   Estratégias
                 </a>

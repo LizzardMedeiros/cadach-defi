@@ -86,6 +86,7 @@ export default function FeaturedProducts({ signer }) {
   }
 
   const handleSubmit = async ({ amount, mode }) => {
+    console.log({ amount, mode });
     if (!selectedProduct || amount <= 0) return;
     const erc20Addr = await call(selectedProduct, 'erc20Token', 'STRATEGY');
     const decimals = await call(erc20Addr, 'decimals', 'ERC20');
@@ -118,7 +119,7 @@ export default function FeaturedProducts({ signer }) {
   }
 
   return (
-    <section className="py-20 bg-white" id="strategies">
+    <section className="py-10 bg-white md:py-20" id="strategies">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <div className="flex items-center justify-center space-x-2 mb-4">
@@ -148,10 +149,10 @@ export default function FeaturedProducts({ signer }) {
                 }`}
               >
                 {/* Product Header */}
-                <div className="p-8">
-                  <div className="flex items-start justify-between mb-6">
-                    <div className="flex items-center space-x-4">
-                      <div className={`p-3 rounded-xl bg-gradient-to-r ${
+                <div className="p-8 max-[450px]:p-6">
+                  <div className="flex items-start justify-between mb-6 gap-2 max-[350px]:mb-3">
+                    <div className="flex items-top space-x-4">
+                      <div className={`p-3 rounded-xl bg-gradient-to-r h-fit mt-1.5 ${
                         product.categoryColor === 'green' ? 'from-green-500 to-emerald-600' :
                         product.categoryColor === 'red' ? 'from-red-500 to-pink-600' :
                         'from-yellow-500 to-orange-500'
@@ -159,10 +160,10 @@ export default function FeaturedProducts({ signer }) {
                         <IconComponent className="w-6 h-6" />
                       </div>
                       <div>
-                        <h3 className="text-xl font-bold text-gray-900 mb-1">
+                        <h3 className="text-base font-bold text-gray-900 mb-1 sm:text-xl">
                           {product.name}
                         </h3>
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getCategoryBadgeColor(product.categoryColor)}`}>
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border  max-[350px]:hidden ${getCategoryBadgeColor(product.categoryColor)}`}>
                           {product.category}
                         </span>
                       </div>
@@ -170,11 +171,16 @@ export default function FeaturedProducts({ signer }) {
                     <div className="text-right">
                       <div className="flex items-center space-x-1 text-green-600 mb-1">
                         <TrendingUp className="w-4 h-4" />
-                        <span className="text-2xl font-bold">{product.currentReturn}%</span>
+                        <span className="text-base font-bold sm:text-2xl">{product.currentReturn}%</span>
                       </div>
                       <span className="text-sm text-gray-500">ao ano</span>
                     </div>
                   </div>
+                  {/* Category Badge for small screens */}
+                  <p className={`visible items-center px-2.5 py-0.5 rounded-full text-xs font-medium border     mb-6 max-w-[50%] mx-auto text-center
+                    min-[351px]:hidden ${getCategoryBadgeColor(product.categoryColor)}`}>
+                          {product.category}
+                  </p>
 
                   {/* Description */}
                   <p className="text-gray-600 mb-6 leading-relaxed">
@@ -203,7 +209,7 @@ export default function FeaturedProducts({ signer }) {
                   </div>
 
                   {/* Action Buttons */}
-                  <div className="flex space-x-3">
+                  <div className="flex space-x-3 flex-wrap gap-3">
                     <Button 
                       variant="outline" 
                       className="flex-1"
@@ -228,14 +234,14 @@ export default function FeaturedProducts({ signer }) {
 
                 {/* Expanded Details */}
                 {isSelected && (
-                  <div className="border-t bg-gray-50 p-8">
+                  <div className="border-t bg-gray-50 p-8 max-[450px]:p-6">
 
-                    <div className="grid grid-cols-3 gap-4 mb-6">
+                    <div className="grid grid-cols-3 gap-4 mb-6 max-[510px]:flex max-[510px]:flex-col max-[510px]:gap-3">
 
                       <div className="bg-white rounded-lg p-4 text-center">
                         <div className="flex items-center justify-center space-x-2 mb-1">
                           <DollarSign className="w-4 h-4 text-gray-600" />
-                          <span className="text-lg font-bold text-gray-900">
+                          <span className="text-base font-bold text-gray-900 sm:text-lg">
                             {productDetails.available || 0}
                           </span>
                         </div>
@@ -245,7 +251,7 @@ export default function FeaturedProducts({ signer }) {
                       <div className="bg-white rounded-lg p-4 text-center">
                         <div className="flex items-center justify-center space-x-2 mb-1">
                           <DollarSign className="w-4 h-4 text-gray-600" />
-                          <span className="text-lg font-bold text-gray-900">
+                          <span className="text-base font-bold text-gray-900 sm:text-lg">
                             {productDetails.yield || 0}
                           </span>
                         </div>
@@ -255,7 +261,7 @@ export default function FeaturedProducts({ signer }) {
                       <div className="bg-white rounded-lg p-4 text-center">
                         <div className="flex items-center justify-center space-x-2 mb-1">
                           <DollarSign className="w-4 h-4 text-gray-600" />
-                          <span className="text-lg font-bold text-gray-900">
+                          <span className="text-base font-bold text-gray-900 sm:text-lg">
                             {productDetails.balance || 0}
                           </span>
                         </div>
@@ -264,7 +270,7 @@ export default function FeaturedProducts({ signer }) {
 
                     </div>
 
-                    <div className="grid grid-cols-3 gap-2">
+                    <div className="flex justify-center pb-2  sm:grid sm:grid-cols-3 sm:gap-2">
                       <div />
                       <Button
                         className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
