@@ -59,6 +59,24 @@ export default function RiskCategories({ setStrategyFilter }) {
         'Estratégias avançadas de DeFi',
         'Maior volatilidade e potencial'
       ]
+    },
+    {
+      id: 'agresddsivo',
+      name: 'Agressivo',
+      icon: Rocket,
+      color: 'red',
+      risco: 4,
+      gradient: 'from-red-500 to-pink-600',
+      bgColor: 'bg-red-50',
+      borderColor: 'border-red-200',
+      textColor: 'text-red-700',
+      returnRange: '15-25%+',
+      description: 'Maior potencial de retorno para investidores experientes',
+      features: [
+        'Protocolos de alto rendimento',
+        'Estratégias avançadas de DeFi',
+        'Maior volatilidade e potencial'
+      ]
     }
   ]
 
@@ -68,7 +86,7 @@ export default function RiskCategories({ setStrategyFilter }) {
 
   return (
     <section id="estrategias" className="py-20 bg-gray-50">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className=" mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
             Escolha seu perfil de investimento
@@ -77,8 +95,7 @@ export default function RiskCategories({ setStrategyFilter }) {
             Oferecemos estratégias para todos os perfis, desde conservadores até os mais arrojados
           </p>
         </div>
-
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto  overflow-visible">
+        <div className="grid grid-cols-4 [@media(max-width:1150px)]:grid-cols-2 [@media(max-width:550px)]:grid-cols-1 gap-8 mx-auto overflow-visible">
           {categories.map((category) => {
             const IconComponent = category.icon
             const isSelected = selectedCategory === category.id
@@ -99,10 +116,10 @@ export default function RiskCategories({ setStrategyFilter }) {
                       <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-r ${category.gradient} text-white mb-4`}>
                         <IconComponent className="w-8 h-8" />
                       </div>
-                      <h3 className="text-2xl font-bold text-gray-900 mb-2 sm:text-2xl">{category.name}</h3>
+                      <h3 className="text-2xl max-[1023px]:text-xl font-bold text-gray-900 mb-2 sm:text-2xl">{category.name}</h3>
                       <div className="flex items-center justify-center space-x-2">
                         <TrendingUp className="w-5 h-5 text-green-600" />
-                        <span className="text-2xl max-[1023px]:text-base font-bold text-green-600 ">{category.returnRange}</span>
+                        <span className="text-2xl max-[1023px]:text-xl font-bold text-green-600 ">{category.returnRange}</span>
                         <span className="text-gray-500 text-sm">ao ano</span>
                       </div>
                     </div>

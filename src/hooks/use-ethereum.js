@@ -24,7 +24,7 @@ const ABI = {
   ]
 }
 
-const NETWORK_CONFIG = {
+export const NETWORK_CONFIG = {
   chainId: "0xa4b1", // 42161 em decimal
   chainName: "Arbitrum One",
   rpcUrls: ["https://arb1.arbitrum.io/rpc"],
@@ -109,6 +109,9 @@ export default function UseEthereum(setSigner = () => null) {
     const s = await provider.getSigner();
     s.balanceWei = await provider.getBalance(s.address);
     setSigner(s);
+    localStorage.setItem("cadash", JSON.stringify({
+      wallet: wallet,
+    }));
   }
 
   async function call(address, fn, contract = 'ERC20', ...params) {
@@ -135,3 +138,4 @@ export default function UseEthereum(setSigner = () => null) {
     send,
   ]
 }
+

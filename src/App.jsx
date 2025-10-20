@@ -7,7 +7,7 @@ import TokensPage from './pages/TokensPage/index.jsx'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 function App() {
-  const [signer, setSigner] = useState()
+  const [signer, setSigner] = useState('initial')
 
   return (
     <BrowserRouter>

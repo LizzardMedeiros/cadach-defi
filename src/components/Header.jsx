@@ -3,47 +3,87 @@ import { Button } from '@/components/ui/button'
 import { Wallet, Menu, X } from 'lucide-react'
 import useEthereum from '@/hooks/use-ethereum';
 import { Link, NavLink } from 'react-router-dom'
+import {NETWORK_CONFIG} from '@/hooks/use-ethereum';
+import Modal from './Modal';
+import WalletRequired from './WalletRequired';
+import NetworkDropdown from './NetworkDropdown';
 
 export default function Header({ setSigner = () => null, signer }) {
   const [isConnected, setIsConnected] = useState(false)
   const [showWalletModal, setShowWalletModal] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [showWalletRequiredModal, setShowWalletRequiredModal] = useState(false);
   const [connect] = useEthereum(setSigner);
 
   useEffect(() => {
-    if (!signer) return;
-    setIsConnected(true)
-    setShowWalletModal(false)
+    const saved = localStorage.getItem("cadash")
+    if (!saved) {
+      return;
+    }
+    try {
+      const parsed = JSON.parse(saved)
+      if (parsed?.wallet) {
+        connect(parsed.wallet) // reconecta automaticamente
+      }
+    } catch (err) {
+      console.error("Erro ao ler localStorage:", err)
+    }
+  }, []) // Persistencia da conexão da carteira com localStorage
+
+  useEffect(() => {
+    // verifica se o signer é um JsonRpcSigner válido
+    const isValidSigner =
+        typeof signer === "object" &&
+        signer !== null &&
+        typeof signer.address === "string" &&
+        "provider" in signer;
+
+      if (!isValidSigner && signer !== 'initial') {
+        setShowWalletRequiredModal(true);
+        return;
+      }
+      const saved = localStorage.getItem("cadash") 
+      if (!saved) {
+        setShowWalletRequiredModal(true);
+        return;
+      }
+      if (isValidSigner) {
+        setIsConnected(true)
+        setShowWalletModal(false)
+      }
+
   }, [signer])
+
 
   return (
     <>
       <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between gap-2.5">
+          <div className="flex h-16 items-center justify-between gap-2">
             {/* Logo */}
             <Link to="/" className="flex items-center">
               <h1 className="  
-                  text-xl 
+                  text-2xl
                   max-[470px]:text-xl 
-                  min-[470px]:text-2xl  font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+                  max-[400px]:text-lg
+                  font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
               >
                 Cadach Finance
               </h1>
             </Link>
 
+
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-8">
-            {/* Restirado pra build
+
             <NavLink
               to="/tokens"
-              className={({isActive}) =>
-                `transition-colors ${isActive ? 'text-gray-900 underline' : 'text-gray-600 hover:text-gray-900'}`
+              className={
+                `transition-colors text-gray-600 hover:text-gray-900`
               }
             >
               Tokens
             </NavLink>
-            */}
               <a href="#estrategias" className="text-gray-600 hover:text-gray-900 transition-colors">
                 Estratégias
               </a>
@@ -57,19 +97,26 @@ export default function Header({ setSigner = () => null, signer }) {
 
             {/* Connect Wallet Button */}
             <div className="flex items-center space-x-4">
+    
+              <NetworkDropdown />
               {!isConnected ? (
-                <Button 
+                <Button
                   onClick={() => setShowWalletModal(true)}
-                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                  className="
+                    bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700
+                    px-3 py-1.5 text-sm
+                    sm:px-4 sm:py-2 sm:text-base
+                  "
                 >
                   <Wallet className="w-4 h-4 mr-2" />
-                  Conectar Carteira
+                  <span className="max-[450px]:hidden">Conectar Carteira</span>
+                  <span className="hidden max-[450px]:inline">Conectar</span>
                 </Button>
               ) : (
-                <div className="flex items-center space-x-2">
+                <button className="flex items-center space-x-2" onClick={() => setShowWalletModal(true)}>
                   <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                   <span className="text-sm text-gray-600">{`${signer.address.substr(0,5)}...${signer.address.substr(-5)}`}</span>
-                </div>
+                </button>
               )}
 
               {/* Mobile Menu Button */}
@@ -88,13 +135,10 @@ export default function Header({ setSigner = () => null, signer }) {
           {mobileMenuOpen && (
             <div className="md:hidden border-t py-4">
               <nav className="flex flex-col space-y-4">
-                {/* Retirado pra build
-                <Link  to="/tokens" className={({isActive}) =>
-                  `transition-colors ${isActive ? 'text-gray-900 underline' : 'text-gray-600 hover:text-gray-900'}`
-                }>
+                <Link  to="/tokens" className="text-gray-600 hover:text-gray-900 transition-colors"
+                >
                   Tokens
                 </Link>
-                */}
                 <a href="#estrategias" className="text-gray-600 hover:text-gray-900 transition-colors">
                   Estratégias
                 </a>
@@ -110,6 +154,11 @@ export default function Header({ setSigner = () => null, signer }) {
         </div>
       </header>
 
+      {/* Modal de warning avisando q a carteira deve estar conectada */}
+      <Modal isOpen={!!showWalletRequiredModal} onClose={() => {setShowWalletRequiredModal(false)}}>
+          <WalletRequired />
+      </Modal>
+
       {/* Wallet Connection Modal */}
       {showWalletModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
@@ -124,6 +173,7 @@ export default function Header({ setSigner = () => null, signer }) {
                 <X className="w-4 h-4" />
               </Button>
             </div>
+    
             
             <div className="space-y-3">
               <Button
