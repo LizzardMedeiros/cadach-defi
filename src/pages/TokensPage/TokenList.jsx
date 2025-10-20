@@ -6,7 +6,7 @@ export default function InvestmentList() {
     {
       code: 'KAVAK6SR01',
       company: 'Kavak Tecnologia e Comércio S.A.',
-      logo: './public/logos/bitCoinOrange.png',
+      logo: './logos/bitCoinOrange.png',
       tags: [
         { label: 'Em captação', color: 'bg-green-100 text-green-700' },
         { label: 'Sênior', color: 'bg-purple-100 text-purple-700' },
@@ -46,7 +46,7 @@ export default function InvestmentList() {
     {
       code: 'MOV2SR03',
       company: 'Movens Intelligence & Capital',
-      logo: '/logos/movens.png',
+      logo: './logos/movens.png',
       tags: [
         { label: 'Em captação', color: 'bg-green-100 text-green-700' },
         { label: 'Sênior', color: 'bg-purple-100 text-purple-700' },
@@ -66,7 +66,7 @@ export default function InvestmentList() {
     {
       code: 'CFIR1SR13',
       company: 'ConferIR Tecnologia S.A.',
-      logo: '/logos/conferir.png',
+      logo: './logos/conferir.png',
       tags: [
         { label: 'Finalizada', color: 'bg-blue-100 text-blue-700' },
         { label: 'Sênior', color: 'bg-purple-100 text-purple-700' },
