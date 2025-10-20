@@ -5,11 +5,13 @@ on:
     branches:
       - master
 
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
 jobs:
   build:
-    permissions:
-      contents: write
-
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -42,8 +44,6 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    permissions:
-      contents: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
