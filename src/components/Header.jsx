@@ -6,6 +6,7 @@ import { Link, NavLink } from 'react-router-dom'
 import {NETWORK_CONFIG} from '@/hooks/use-ethereum';
 import Modal from './Modal';
 import WalletRequired from './WalletRequired';
+import NetworkDropdown from './NetworkDropdown';
 
 export default function Header({ setSigner = () => null, signer }) {
   const [isConnected, setIsConnected] = useState(false)
@@ -17,7 +18,6 @@ export default function Header({ setSigner = () => null, signer }) {
   useEffect(() => {
     const saved = localStorage.getItem("cadash")
     if (!saved) {
-      setShowWalletRequiredModal(true);
       return;
     }
     try {
@@ -31,16 +31,29 @@ export default function Header({ setSigner = () => null, signer }) {
   }, []) // Persistencia da conexão da carteira com localStorage
 
   useEffect(() => {
-    if (!signer) return;
-    setIsConnected(true)
-    setShowWalletModal(false)
+    // verifica se o signer é um JsonRpcSigner válido
+    const isValidSigner =
+        typeof signer === "object" &&
+        signer !== null &&
+        typeof signer.address === "string" &&
+        "provider" in signer;
+
+      if (!isValidSigner && signer !== 'initial') {
+        setShowWalletRequiredModal(true);
+        return;
+      }
+      const saved = localStorage.getItem("cadash") 
+      if (!saved) {
+        setShowWalletRequiredModal(true);
+        return;
+      }
+      if (isValidSigner) {
+        setIsConnected(true)
+        setShowWalletModal(false)
+      }
+
   }, [signer])
 
-  const handleNetworkSource = () => {
-    if (NETWORK_CONFIG.chainName.includes("Arbitrum")) {
-      return "../../public/logos/arbitrum.png"
-    }
-  }
 
   return (
     <>
@@ -84,7 +97,8 @@ export default function Header({ setSigner = () => null, signer }) {
 
             {/* Connect Wallet Button */}
             <div className="flex items-center space-x-4">
-              <img src={handleNetworkSource()} alt="Logo" className="h-6 w-6 mr-6"/>
+    
+              <NetworkDropdown />
               {!isConnected ? (
                 <Button
                   onClick={() => setShowWalletModal(true)}
