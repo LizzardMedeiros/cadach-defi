@@ -8,7 +8,7 @@ export default function NetworkDropdown() {
     const sources = [];
 
     if (NETWORK_CONFIG.chainName.includes("Arbitrum")) {
-      sources.push("../../public/logos/arbitrum.png");
+      sources.push("./logos/arbitrum.png");
     } // Depois tem q ser retrabalhado esse array e ser adcionado novas imagens
 
     setChainName(sources);
