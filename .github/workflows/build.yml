@@ -23,11 +23,14 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Push page branch
+      - name: Deploy to GitHub Pages
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
+          git fetch origin
           git checkout --orphan pages
-          git --work-tree pages add --all
-          git commit -m "Build from commit $GITHUB_SHA"
+          rm -rf .github .gitignore node_modules src public package.json package-lock.json
+          mv dist/* .
+          git add .
+          git commit -m "Deploy from commit $GITHUB_SHA"
           git push -f origin pages
