@@ -32,8 +32,9 @@ jobs:
           git config user.email "actions@github.com"
           git fetch origin
           git checkout --orphan pages
-          rm -rf .github .gitignore node_modules src public package.json package-lock.json
+          mv public/* .
           mv dist/* .
+          rm -rf .github .gitignore node_modules src public dist package.json package-lock.json
           git add .
           git commit -m "Deploy from commit $GITHUB_SHA"
           git push -f origin pages
