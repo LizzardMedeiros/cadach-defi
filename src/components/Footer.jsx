@@ -70,7 +70,7 @@ export default function Footer() {
               </li>
               <li>
                 <a   
-                  href="../../public/docs/whitepaper.pdf"
+                  href="./public/docs/whitepaper.pdf"
                   download="whitepaper.pdf"
                   className="text-gray-400 hover:text-white transition-colors flex items-center space-x-2"
                 >
