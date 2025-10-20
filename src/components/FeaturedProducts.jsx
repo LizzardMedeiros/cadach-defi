@@ -10,7 +10,7 @@ const strategyList = [
   [
     '0x4cdBD464A1fC138F8a2741DFEf57153934bcbeBd', // Mock
     // '0x46455684E06A811A4BDeb93D3acb421EFe8e4C97',
-    'Estratégia - Dolarizando meu investimento',
+    'Estratégia - Renda em dólar',
     'Baixo Risco',
     'green',
     Shield,
@@ -24,12 +24,14 @@ const strategyList = [
     ['Auditado por empresas de segurança','Rebalanceamento automático','Saque a qualquer momento'],
   ],
 ]
+// Renda em bitcoin, Renda em Ethereum, 
 
 export default function FeaturedProducts({ signer }) {
   const [products, setProducts] = useState([])
   const [selectedProduct, setSelectedProduct] = useState(null)
   const [modal, setModal] = useState();
   const [productDetails, setProductDetails] = useState({})
+  const [error, setError] = useState(null);
 
   const [, call, send] = useEthereum();
 
@@ -74,7 +76,7 @@ export default function FeaturedProducts({ signer }) {
         available: Number(ethers.formatUnits(available, decimals)).toFixed(2), // Total Aplicado
         balance: Number(ethers.formatUnits(balance, decimals)).toFixed(5), // Disponível para resgate
         gas: Number(ethers.formatEther(signer.balanceWei)).toFixed(2),
-        yield: Number(ethers.formatUnits(yields, decimals)).toFixed(2),
+        yield: Number(ethers.formatUnits(yields, decimals)).toFixed(5),
       })
     }
     setSelectedProduct(unselect ? null : productId);
@@ -84,9 +86,10 @@ export default function FeaturedProducts({ signer }) {
     setSelectedProduct(productId);
     setModal('buy');
   }
+  const onClose = () => {setError(null); setModal(); setSelectedProduct(null);}
+  //Perguntar se o onClose LUIS
 
   const handleSubmit = async ({ amount, mode }) => {
-    console.log({ amount, mode });
     if (!selectedProduct || amount <= 0) return;
     const erc20Addr = await call(selectedProduct, 'erc20Token', 'STRATEGY');
     const decimals = await call(erc20Addr, 'decimals', 'ERC20');
@@ -99,12 +102,19 @@ export default function FeaturedProducts({ signer }) {
     switch (mode) {
       case 'sell': {
         await send(signer, selectedProduct, 'withdraw', 'STRATEGY', parsedAmount);
+        onClose();
         return;
       }
       default: {
-        if (balance < amount) throw new Error('Unsuficient amount!');
+        if (balance < amount) {
+          console.log('Saldo insuficiente , balance:', balance, 'amount:', amount);
+          setError('Saldo insuficiente');
+      
+          return;
+        }
         await send(signer, erc20Addr, 'approve', 'ERC20', selectedProduct, parsedAmount);
         await send(signer, selectedProduct, 'deposit', 'STRATEGY', parsedAmount);
+        onClose();
       }
     }
   }
@@ -163,7 +173,7 @@ export default function FeaturedProducts({ signer }) {
                         <h3 className="text-base font-bold text-gray-900 mb-1 sm:text-xl">
                           {product.name}
                         </h3>
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border  max-[350px]:hidden ${getCategoryBadgeColor(product.categoryColor)}`}>
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border  max-[500px]:hidden ${getCategoryBadgeColor(product.categoryColor)}`}>
                           {product.category}
                         </span>
                       </div>
@@ -173,13 +183,16 @@ export default function FeaturedProducts({ signer }) {
                         <TrendingUp className="w-4 h-4" />
                         <span className="text-base font-bold sm:text-2xl">{product.currentReturn}%</span>
                       </div>
-                      <span className="text-sm text-gray-500">ao ano</span>
+                      <span className="hidden text-sm text-gray-500 sm:visible">ao ano</span>
                     </div>
                   </div>
                   {/* Category Badge for small screens */}
-                  <p className={`visible items-center px-2.5 py-0.5 rounded-full text-xs font-medium border     mb-6 max-w-[50%] mx-auto text-center
-                    min-[351px]:hidden ${getCategoryBadgeColor(product.categoryColor)}`}>
-                          {product.category}
+                  <p 
+                    className={`visible items-center px-2.5 py-0.5 rounded-full text-xs font-medium border
+                    mb-6 max-w-[50%] mx-auto text-center
+                    min-[501px]:hidden ${getCategoryBadgeColor(product.categoryColor)}`}
+                  >
+                    {product.category}
                   </p>
 
                   {/* Description */}
@@ -270,8 +283,8 @@ export default function FeaturedProducts({ signer }) {
 
                     </div>
 
-                    <div className="flex justify-center pb-2  sm:grid sm:grid-cols-3 sm:gap-2">
-                      <div />
+                    <div className="flex justify-center pb-2  flex-wrap gap-3">
+                  
                       <Button
                         className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
                         onClick={() => setModal('sell')}
@@ -357,13 +370,15 @@ export default function FeaturedProducts({ signer }) {
           </Button>
         </div>
       </div>
-      <Modal isOpen={!!modal} onClose={() => {setModal(); setSelectedProduct(null);}}>
+      <Modal isOpen={!!modal} onClose={() => {setError(null); setModal(); setSelectedProduct(null);}}>
         <ModalContent
           product={products.find((p) => p.id === selectedProduct)}
           mode={modal}
           userBalance={productDetails.balance}
           onClose={() => setModal()}
           onSubmit={handleSubmit}
+          error={error}
+          setError={setError}
         />
       </Modal>
     </section>

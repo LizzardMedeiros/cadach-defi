@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Shield, Scale, Rocket, TrendingUp, Info } from 'lucide-react'
 
-export default function RiskCategories() {
+export default function RiskCategories({ setStrategyFilter }) {
   const [selectedCategory, setSelectedCategory] = useState(null)
 
   const categories = [
@@ -10,6 +10,7 @@ export default function RiskCategories() {
       id: 'baixo-risco',
       name: 'Baixo Risco',
       icon: Shield,
+      risco: 1,
       color: 'green',
       gradient: 'from-green-500 to-emerald-600',
       bgColor: 'bg-green-50',
@@ -27,6 +28,7 @@ export default function RiskCategories() {
       id: 'moderado',
       name: 'Moderado',
       icon: Scale,
+      risco: 2,
       color: 'yellow',
       gradient: 'from-yellow-500 to-orange-500',
       bgColor: 'bg-yellow-50',
@@ -45,6 +47,7 @@ export default function RiskCategories() {
       name: 'Agressivo',
       icon: Rocket,
       color: 'red',
+      risco: 3,
       gradient: 'from-red-500 to-pink-600',
       bgColor: 'bg-red-50',
       borderColor: 'border-red-200',
@@ -125,7 +128,8 @@ export default function RiskCategories() {
                     className={`w-full bg-gradient-to-r ${category.gradient} hover:opacity-90 text-white font-semibold py-3 rounded-lg transition-all duration-300 mt-auto`}
                     onClick={(e) => {
                       e.stopPropagation();
-                      const el = document.getElementById("strategies");
+                      setStrategyFilter(category.risco);
+                      const el = document.getElementById("table");
                       if (el) el.scrollIntoView({ behavior: "smooth" });
                     }}
                   >

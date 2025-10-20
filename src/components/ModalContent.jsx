@@ -13,9 +13,12 @@ export default function Content({
   fees = {
     transaction: 0.5, // Taxa de transação em %
     gas: 0.1 // Taxa de gas estimada em USDT
-  }
+  },
+  error,
+  setError,
 }) {
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState(0.00);
+
   
   const isBuyMode = mode === 'buy';
   const totalFees = fees.transaction ? (amount * fees.transaction / 100) : 0;
@@ -34,7 +37,6 @@ export default function Content({
       },
       total: totalWithFees
     });
-    onClose();
   };
 
   return (
@@ -68,7 +70,7 @@ export default function Content({
         </p>
       </div>
 
-      <div className="space-y-6">
+      <div >
         <div>
           <div className="flex items-center justify-between mb-2">
             <label htmlFor="amount" className="block text-sm font-medium text-gray-700">
@@ -77,7 +79,9 @@ export default function Content({
             {!isBuyMode && (
               <button
                 type="button"
-                onClick={() => setAmount(userBalance)}
+                onClick={() => {
+                  setAmount(userBalance)
+                }}
                 className="text-xs font-medium text-blue-600 hover:text-blue-700"
               >
                 Saldo: {userBalance} USDT
@@ -94,7 +98,9 @@ export default function Content({
               name="amount"
               step="0.01"
               min="0"
+              onFocus={() => setError(null)}
               max={!isBuyMode ? userBalance : undefined}
+              value={amount}
               placeholder="0.00"
               className="block w-full pl-10 pr-14 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
               onChange={(ev) => setAmount(Number(ev.target.value))}
@@ -106,6 +112,9 @@ export default function Content({
           </div>
           <p className="mt-2 text-sm text-gray-500">
             {isBuyMode ? 'Valor mínimo: 10 USDT' : `Máximo disponível: ${userBalance} USDT`}
+          </p>
+          <p className="mt-2 text-sm text-red-700 mb-3 h-4" >
+            {error}
           </p>
         </div>
 
@@ -155,16 +164,11 @@ export default function Content({
         <div className="bg-gray-50 rounded-lg p-4">
           <h4 className="font-medium text-gray-900 mb-3">Sobre o Ativo</h4>
           <div className="space-y-2 text-sm max-[400px]:text-xs">
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600">Estratégia:</span>
-              <span className="font-medium text-gray-900 max-[400px]:max-w-[50%] text-right">
-                {product?.name}
-              </span>
-            </div>
+            
             <div className="flex justify-between">
               <span className="text-gray-600 max-w-[50%]">Rendimento esperado:</span>
               <span className="font-medium text-green-600 max-[400px]:max-w-[50%]">
-                {product?.currentReturn}% ao ano
+                {product?.currentReturn}% APY
               </span>
             </div>
             <div className="flex justify-between">

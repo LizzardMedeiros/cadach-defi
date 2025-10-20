@@ -1,4 +1,6 @@
 import { ethers } from "ethers";
+import WalletConnectProvider from "@walletconnect/ethereum-provider";
+import CoinbaseWalletSDK from "@coinbase/wallet-sdk";
 
 const ABI = {
   STRATEGY: [
@@ -39,7 +41,45 @@ const NETWORK_CONFIG = {
 
 export default function UseEthereum(setSigner = () => null) {
   async function connect(wallet) {
+    let provider;
+  
     switch(wallet) {
+      case "trustwallet": {
+        if (!window.ethereum?.isTrust)
+          throw new Error("TrustWallet não encontrada. Abra em um navegador com Trust Wallet ou use o app mobile.");
+        await window.ethereum.request({ method: "eth_requestAccounts" });
+        provider = new ethers.BrowserProvider(window.ethereum);
+        break;
+      }
+      case "walletconnect": {
+        const wcProvider = await WalletConnectProvider.init({
+          projectId: "SEU_PROJECT_ID_WALLETCONNECT", // obrigatório
+          chains: [parseInt(NETWORK_CONFIG.chainId, 16)],
+          showQrModal: true,
+        });
+
+        await wcProvider.enable();
+
+        provider = new ethers.BrowserProvider(wcProvider);
+        break;
+      }
+      case "coinbase": {
+        const coinbaseWallet = new CoinbaseWalletSDK({
+          appName: "Minha DApp",
+          appLogoUrl: "https://example.com/logo.png",
+          darkMode: false,
+        });
+
+        const cbProvider = coinbaseWallet.makeWeb3Provider(
+          NETWORK_CONFIG.rpcUrls[0],
+          parseInt(NETWORK_CONFIG.chainId, 16)
+        );
+
+        await cbProvider.request({ method: "eth_requestAccounts" });
+        provider = new ethers.BrowserProvider(cbProvider);
+
+        break;
+      }
       default: {
         // Request Accounts e get chainId
         await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -60,12 +100,15 @@ export default function UseEthereum(setSigner = () => null) {
           });
 
         // Gets the signer and sets the current balance
-        const provider = new ethers.BrowserProvider(window.ethereum);
-        const s = await provider.getSigner();
-        s.balanceWei = await provider.getBalance(s.address);
-        setSigner(s);
+        provider = new ethers.BrowserProvider(window.ethereum);
       }
     }
+
+    if (!provider) return;
+
+    const s = await provider.getSigner();
+    s.balanceWei = await provider.getBalance(s.address);
+    setSigner(s);
   }
 
   async function call(address, fn, contract = 'ERC20', ...params) {

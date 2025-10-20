@@ -129,7 +129,7 @@ export default function Header({ setSigner = () => null, signer }) {
               <Button
                 variant="outline"
                 className="w-full justify-start"
-                onClick={() => connect('MetaMask')}
+                onClick={() => connect('metamask')}
               >
                 <div className="w-6 h-6 bg-orange-500 rounded-full mr-3 flex items-center justify-center text-white text-xs font-bold">
                   M
@@ -157,6 +157,17 @@ export default function Header({ setSigner = () => null, signer }) {
                   C
                 </div>
                 Coinbase Wallet
+              </Button>
+
+              <Button
+                variant="outline"
+                className="w-full justify-start"
+                onClick={() => connect('trustwallet')}
+              >
+                <div className="w-6 h-6 bg-blue-600 rounded-full mr-3 flex items-center justify-center text-white text-xs font-bold">
+                  T
+                </div>
+                Trust Wallet
               </Button>
             </div>
           </div>

@@ -31,8 +31,7 @@ export default function Hero() {
           
           {/* Subtitle */}
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
-            A primeira plataforma DeFi 100% em português. Simples, segura e transparente. 
-            Acesse estratégias de investimento profissionais sem complicação.
+            Aqui você encontra estratégias profissionais prontas para usar, automação que protege seu capital e suporte prático para começar hoje no DEFI
           </p>
           
           {/* Feature highlights */}
