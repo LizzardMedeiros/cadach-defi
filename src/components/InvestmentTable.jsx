@@ -172,7 +172,7 @@ export default function InvestmentTable({
       <div
         role="columnheader"
         aria-sort={ariaSort}
-        className="px-4 py-3 text-sm font-medium text-gray-700 whitespace-nowrap"
+        className="px-4 py-3 text-sm font-medium text-gray-700 whitespace-nowrap max-w-screen"
       >
         {sortable ? (
           <button

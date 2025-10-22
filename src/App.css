@@ -122,11 +122,11 @@ html {
 
   html, body {
     width: 100%;
-    max-width: 100%;
+    max-width: 100vw;
     overflow-x: hidden;
   }
   #root { width: 100%; max-width: 100%; overflow-x: hidden; }
-  
+
   ::-webkit-scrollbar {
     width: 6px;      /* scroll vertical */
     height: 6px;     /* scroll horizontal */
