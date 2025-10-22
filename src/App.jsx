@@ -11,7 +11,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-white max-w-screen">
         <Header setSigner={setSigner} signer={signer} />
         <main>
           <Routes>
