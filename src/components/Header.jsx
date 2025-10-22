@@ -53,6 +53,62 @@ export default function Header({ setSigner = () => null, signer }) {
 
   }, [signer])
 
+    useEffect(() => {
+    const html = document.documentElement;
+    const body = document.body;
+
+    if (showWalletModal) {
+      const y = window.scrollY || window.pageYOffset || 0;
+      body.dataset.scrollY = String(y);
+
+      // trava o fundo de forma robusta
+      body.style.position = "fixed";
+      body.style.top = `-${y}px`;
+      body.style.left = "0";
+      body.style.right = "0";
+      body.style.width = "100%";
+
+      // bloqueia overflow no root e evita scroll chaining
+      html.style.overflow = "hidden";
+      html.style.overscrollBehavior = "contain";
+    } else {
+      // restaura
+      const saved = parseInt(body.dataset.scrollY || "0", 10);
+
+      body.style.position = "";
+      body.style.top = "";
+      body.style.left = "";
+      body.style.right = "";
+      body.style.width = "";
+      body.removeAttribute("data-scroll-y");
+
+      const html = document.documentElement;
+      html.style.overflow = "";
+      html.style.overscrollBehavior = "";
+
+      // volta pro ponto onde o usuário estava
+      window.scrollTo(0, saved);
+    }
+
+    return () => {
+      // limpeza caso o componente desmonte com o modal aberto
+      const saved = parseInt(body?.dataset?.scrollY || "0", 10);
+
+      body.style.position = "";
+      body.style.top = "";
+      body.style.left = "";
+      body.style.right = "";
+      body.style.width = "";
+      body?.removeAttribute?.("data-scroll-y");
+
+      const html = document.documentElement;
+      html.style.overflow = "";
+      html.style.overscrollBehavior = "";
+
+      if (showWalletModal) window.scrollTo(0, saved);
+    };
+  }, [showWalletModal]);
+
 
   return (
     <>
@@ -160,7 +216,7 @@ export default function Header({ setSigner = () => null, signer }) {
 
       {/* Wallet Connection Modal */}
       {showWalletModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 max-w-screen scroll-auto">
           <div className="bg-white rounded-lg p-6 w-full max-w-sm">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold">Conectar Carteira</h3>
