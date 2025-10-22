@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 import WalletConnectProvider from "@walletconnect/ethereum-provider";
 import CoinbaseWalletSDK from "@coinbase/wallet-sdk";
+import networkList from "@/networkList.json";
 
 const ABI = {
   STRATEGY: [
@@ -24,37 +25,29 @@ const ABI = {
   ]
 }
 
-export const NETWORK_CONFIG = {
-  chainId: "0xa4b1", // 42161 em decimal
-  chainName: "Arbitrum One",
-  rpcUrls: ["https://arb1.arbitrum.io/rpc"],
-  nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
-  blockExplorerUrls: ["https://arbiscan.io/"],
-};
-/* const NETWORK_CONFIG = {
-  chainId: "0x539", // 42161 em decimal
-  chainName: "Local ETH",
-  rpcUrls: ["http://localhost:8545"],
-  nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
-  blockExplorerUrls: ["https://arbiscan.io/"],
-}; */
-
 export default function UseEthereum(setSigner = () => null) {
-  async function connect(wallet) {
+  async function connect(wallet, network=networkList[0]) {
     let provider;
+    const chainId = parseInt(network.chainId, 16);
   
     switch(wallet) {
       case "trustwallet": {
         if (!window.ethereum?.isTrust)
           throw new Error("TrustWallet não encontrada. Abra em um navegador com Trust Wallet ou use o app mobile.");
+        
         await window.ethereum.request({ method: "eth_requestAccounts" });
+        await window.ethereum.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId }],
+        })
+
         provider = new ethers.BrowserProvider(window.ethereum);
         break;
       }
       case "walletconnect": {
         const wcProvider = await WalletConnectProvider.init({
           projectId: "SEU_PROJECT_ID_WALLETCONNECT", // obrigatório
-          chains: [parseInt(NETWORK_CONFIG.chainId, 16)],
+          chains: [chainId],
           showQrModal: true,
         });
 
@@ -70,11 +63,7 @@ export default function UseEthereum(setSigner = () => null) {
           darkMode: false,
         });
 
-        const cbProvider = coinbaseWallet.makeWeb3Provider(
-          NETWORK_CONFIG.rpcUrls[0],
-          parseInt(NETWORK_CONFIG.chainId, 16)
-        );
-
+        const cbProvider = coinbaseWallet.makeWeb3Provider(network.rpcUrls[0], chainId);
         await cbProvider.request({ method: "eth_requestAccounts" });
         provider = new ethers.BrowserProvider(cbProvider);
 
@@ -86,16 +75,16 @@ export default function UseEthereum(setSigner = () => null) {
         const chainId = await window.ethereum.request({ method: 'eth_chainId' });
 
         // Tries to change chain if necessary
-        if (chainId !== NETWORK_CONFIG.chainId)
+        if (chainId !== network.chainId)
           await window.ethereum.request({
             method: 'wallet_switchEthereumChain',
-            params: [{ chainId: NETWORK_CONFIG.chainId }],
+            params: [{ chainId: network.chainId }],
           })
           .catch(async (err) => {
             if (err.code === 4902)
               await window.ethereum.request({
                 method: 'wallet_addEthereumChain',
-                params: [NETWORK_CONFIG],
+                params: [network],
               });
           });
 
@@ -109,6 +98,7 @@ export default function UseEthereum(setSigner = () => null) {
     const s = await provider.getSigner();
     s.balanceWei = await provider.getBalance(s.address);
     setSigner(s);
+
     localStorage.setItem("cadash", JSON.stringify({
       wallet: wallet,
     }));

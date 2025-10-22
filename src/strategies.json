@@ -1,0 +1,18 @@
+[
+  [
+    "arbitrum",
+    "0x4cdBD464A1fC138F8a2741DFEf57153934bcbeBd",
+    "Estratégia - Renda em dólar",
+    "Baixo Risco",
+    "green",
+    "Shield",
+    0,
+    "Investimento em tokens lastreados em dólar para proteção contra inflação",
+    "Esta estratégia foca na preservação do patrimônio através de investimentos em tokens lastreados no dólar. Ideal para quem busca proteção contra a volatilidade do mercado.",
+    0,
+    0,
+    [["AAVE Pool", 100, "bg-green-500"]],
+    ["Risco de smart contract", "Volatilidade do preço do dólar"],
+    ["Auditado por empresas de segurança","Rebalanceamento automático","Saque a qualquer momento"]
+  ]
+]

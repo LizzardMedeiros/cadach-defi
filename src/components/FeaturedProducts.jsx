@@ -3,27 +3,10 @@ import { ethers } from 'ethers'
 import { Button } from '@/components/ui/button'
 import Modal from '@/components/Modal';
 import ModalContent from '@/components/ModalContent';
-import { Shield, TrendingUp, Users, DollarSign, Info, Star } from 'lucide-react'
+import * as Icons from 'lucide-react'
 import useEthereum from '@/hooks/use-ethereum'
+import strategyList from '@/strategies.json'
 
-const strategyList = [
-  [
-    '0x4cdBD464A1fC138F8a2741DFEf57153934bcbeBd', // Mock
-    // '0x46455684E06A811A4BDeb93D3acb421EFe8e4C97',
-    'Estratégia - Renda em dólar',
-    'Baixo Risco',
-    'green',
-    Shield,
-    0, // Rentabilidade
-    'Investimento em tokens lastreados em dólar para proteção contra inflação',
-    'Esta estratégia foca na preservação do patrimônio através de investimentos em tokens lastreados no dólar. Ideal para quem busca proteção contra a volatilidade do mercado.',
-    0, // Total investido
-    0, // Total de investidores
-    [['AAVE Pool', 100, 'bg-green-500']],
-    ['Risco de smart contract', 'Volatilidade do preço do dólar'],
-    ['Auditado por empresas de segurança','Rebalanceamento automático','Saque a qualquer momento'],
-  ],
-]
 // Renda em bitcoin, Renda em Ethereum, 
 
 export default function FeaturedProducts({ signer }) {
@@ -38,20 +21,21 @@ export default function FeaturedProducts({ signer }) {
   useEffect(() => {
     let promises = [];
     strategyList.forEach((s) => {
-      const [address] = s;
+      const [_, address] = s;
+
       promises.push(
         call(address, 'getApy', 'STRATEGY')
-          .then((r) => s[5] = Number(ethers.formatUnits(r, 27) * 100).toFixed(2)),
+          .then((r) => s[6] = Number(ethers.formatUnits(r, 27) * 100).toFixed(2)),
         call(address, 'getTotalAllocated', 'STRATEGY')
-          .then((r) => s[8] = Number(ethers.formatUnits(r, 27) * 100).toFixed(2)),
-        call(address, 'investorCounter', 'STRATEGY').then((r) => s[9] = r),
+          .then((r) => s[9] = Number(ethers.formatUnits(r, 27) * 100).toFixed(2)),
+        call(address, 'investorCounter', 'STRATEGY').then((r) => s[10] = r),
       );
     });
 
     Promise.all(promises)
       .then(() => {
         const keys = [
-          'id', 'name', 'category', 'categoryColor', 'icon', 'currentReturn',
+          'net', 'id', 'name', 'category', 'categoryColor', 'icon', 'currentReturn',
           'description', 'longDescription', 'tvl', 'investors', 'composition',
           'risks', 'features',
         ];
@@ -133,7 +117,7 @@ export default function FeaturedProducts({ signer }) {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <div className="flex items-center justify-center space-x-2 mb-4">
-            <Star className="w-6 h-6 text-yellow-500" />
+            <Icons.Star className="w-6 h-6 text-yellow-500" />
             <span className="text-sm font-semibold text-gray-600 uppercase tracking-wide">
               Produtos em Destaque
             </span>
@@ -148,7 +132,7 @@ export default function FeaturedProducts({ signer }) {
 
         <div className={`grid lg:grid-cols-${Math.min(products.length, 2)} gap-8 max-w-6xl mx-auto`}>
           {products.map((product) => {
-            const IconComponent = product.icon
+            const IconComponent = Icons[product.icon]
             const isSelected = selectedProduct === product.id
             
             return (
@@ -180,7 +164,7 @@ export default function FeaturedProducts({ signer }) {
                     </div>
                     <div className="text-right">
                       <div className="flex items-center space-x-1 text-green-600 mb-1">
-                        <TrendingUp className="w-4 h-4" />
+                        <Icons.TrendingUp className="w-4 h-4" />
                         <span className="text-base font-bold sm:text-2xl">{product.currentReturn}%</span>
                       </div>
                       <span className="hidden text-sm text-gray-500 sm:visible">ao ano</span>
@@ -205,7 +189,7 @@ export default function FeaturedProducts({ signer }) {
 
                     <div className="bg-gray-50 rounded-lg p-4 text-center">
                       <div className="flex items-center justify-center space-x-2 mb-1">
-                        <DollarSign className="w-4 h-4 text-gray-600" />
+                        <Icons.DollarSign className="w-4 h-4 text-gray-600" />
                         <span className="text-lg font-bold text-gray-900">{product.tvl}</span>
                       </div>
                       <span className="text-sm text-gray-500">Total Investido</span>
@@ -213,7 +197,7 @@ export default function FeaturedProducts({ signer }) {
 
                     <div className="bg-gray-50 rounded-lg p-4 text-center">
                       <div className="flex items-center justify-center space-x-2 mb-1">
-                        <Users className="w-4 h-4 text-gray-600" />
+                        <Icons.Users className="w-4 h-4 text-gray-600" />
                         <span className="text-lg font-bold text-gray-900">{product.investors}</span>
                       </div>
                       <span className="text-sm text-gray-500">Investidores</span>
@@ -228,7 +212,7 @@ export default function FeaturedProducts({ signer }) {
                       className="flex-1"
                       onClick={() => handleProductClick(product.id)}
                     >
-                      <Info className="w-4 h-4 mr-2" />
+                      <Icons.Info className="w-4 h-4 mr-2" />
                       {isSelected ? 'Menos detalhes' : 'Ver detalhes'}
                     </Button>
                     <Button 
@@ -253,7 +237,7 @@ export default function FeaturedProducts({ signer }) {
 
                       <div className="bg-white rounded-lg p-4 text-center">
                         <div className="flex items-center justify-center space-x-2 mb-1">
-                          <DollarSign className="w-4 h-4 text-gray-600" />
+                          <Icons.DollarSign className="w-4 h-4 text-gray-600" />
                           <span className="text-base font-bold text-gray-900 sm:text-lg">
                             {productDetails.available || 0}
                           </span>
@@ -263,7 +247,7 @@ export default function FeaturedProducts({ signer }) {
 
                       <div className="bg-white rounded-lg p-4 text-center">
                         <div className="flex items-center justify-center space-x-2 mb-1">
-                          <DollarSign className="w-4 h-4 text-gray-600" />
+                          <Icons.DollarSign className="w-4 h-4 text-gray-600" />
                           <span className="text-base font-bold text-gray-900 sm:text-lg">
                             {productDetails.yield || 0}
                           </span>
@@ -273,7 +257,7 @@ export default function FeaturedProducts({ signer }) {
 
                       <div className="bg-white rounded-lg p-4 text-center">
                         <div className="flex items-center justify-center space-x-2 mb-1">
-                          <DollarSign className="w-4 h-4 text-gray-600" />
+                          <Icons.DollarSign className="w-4 h-4 text-gray-600" />
                           <span className="text-base font-bold text-gray-900 sm:text-lg">
                             {productDetails.balance || 0}
                           </span>
@@ -289,7 +273,7 @@ export default function FeaturedProducts({ signer }) {
                         className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
                         onClick={() => setModal('sell')}
                       >
-                        <DollarSign className="w-4 h-4 mr-2" />
+                        <Icons.DollarSign className="w-4 h-4 mr-2" />
                         Resgatar patrimônio
                       </Button>
 
@@ -299,7 +283,7 @@ export default function FeaturedProducts({ signer }) {
                           send(signer, product.id, 'withdrawYields', 'STRATEGY')
                         }}
                       >
-                        <DollarSign className="w-4 h-4 mr-2" />
+                        <Icons.DollarSign className="w-4 h-4 mr-2" />
                         Resgatar ganhos
                       </Button>
                     </div>

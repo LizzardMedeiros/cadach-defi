@@ -1,5 +1,5 @@
 import { Wallet } from "lucide-react";
-import { NETWORK_CONFIG } from "@/hooks/use-ethereum";
+import networkList from "@/networkList.json";
 
 export default function WalletRequired() {
   return (
@@ -13,7 +13,7 @@ export default function WalletRequired() {
       </h2>
 
       <p className="text-gray-600 text-xl pb-10">
-        Para acessar as funcionalidades, é necessário conectar uma carteira compatível com a rede {NETWORK_CONFIG.chainName || "Arbitrum"}.
+        Para acessar as funcionalidades, é necessário conectar uma carteira compatível com a rede {networkList[0].chainName || "Arbitrum"}.
       </p>
 
 

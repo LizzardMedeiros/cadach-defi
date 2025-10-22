@@ -3,7 +3,6 @@ import { Button } from '@/components/ui/button'
 import { Wallet, Menu, X } from 'lucide-react'
 import useEthereum from '@/hooks/use-ethereum';
 import { Link, NavLink } from 'react-router-dom'
-import {NETWORK_CONFIG} from '@/hooks/use-ethereum';
 import Modal from './Modal';
 import WalletRequired from './WalletRequired';
 import NetworkDropdown from './NetworkDropdown';

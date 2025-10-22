@@ -1,18 +1,13 @@
-import { NETWORK_CONFIG } from "@/hooks/use-ethereum";
 import React, { useEffect, useState } from "react";
+import strategyList from '@/strategies.json'
 
 export default function NetworkDropdown() {
-  const [chainNames , setChainName] = useState([])
+  const [chainNames , setChainNames] = useState([])
 
     const handleNetworkSource = () => {
-    const sources = [];
-
-    if (NETWORK_CONFIG.chainName.includes("Arbitrum")) {
-      sources.push("./logos/arbitrum.png");
-    } // Depois tem q ser retrabalhado esse array e ser adcionado novas imagens
-
-    setChainName(sources);
-  };
+      const sources = strategyList.map(([network]) => `./logos/${network}.png`)
+      setChainNames(sources);
+    };
 
   useEffect(() => {
     handleNetworkSource();
