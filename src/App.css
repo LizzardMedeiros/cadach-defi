@@ -119,6 +119,13 @@ html {
   * {
     @apply border-border outline-ring/50;
   }
+
+  html, body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
   ::-webkit-scrollbar {
     width: 6px;      /* scroll vertical */
     height: 6px;     /* scroll horizontal */
