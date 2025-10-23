@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { TrendingUp, TrendingDown, DollarSign, Info, ArrowRightLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import * as Icons from 'lucide-react';
 
 const fn = () => null;
 
@@ -39,19 +40,37 @@ export default function Content({
     });
   };
 
+  useEffect(() => {
+  // Zera erro quando não há valor
+  if (!amount || amount <= 0) {
+    setError(null);
+    return;
+  }
+
+  // Verificações principais
+  if (isBuyMode && amount > userBalance) {
+    setError('Saldo insuficiente');
+  } else {
+    setError(null)
+  }
+}, [amount, userBalance, isBuyMode, setError]);
+
   return (
     <div className="p-6 max-[470px]:p-3">
       <div className="text-center mb-6">
         <div className="flex items-center justify-center mb-4">
           {(() => {
             if (!product) return null;
-            const IconComponent = product.icon;
+            const IconComponent = typeof product?.icon === 'string'
+              ? (Icons[product.icon] || Icons.HelpCircle) 
+              : (product?.icon || Icons.HelpCircle);  
+
             return (
               <div className={`p-3 rounded-xl bg-gradient-to-r ${
                 isBuyMode 
                   ? (product.categoryColor === 'green' ? 'from-green-500 to-emerald-600' :
-                     product.categoryColor === 'red' ? 'from-red-500 to-pink-600' :
-                     'from-yellow-500 to-orange-500')
+                    product.categoryColor === 'red' ? 'from-red-500 to-pink-600' :
+                    'from-yellow-500 to-orange-500')
                   : 'from-purple-500 to-indigo-600'
               } text-white`}>
                 <IconComponent className="w-8 h-8" />
@@ -196,11 +215,20 @@ export default function Content({
           <Button
             type="button"
             onClick={handleSubmit}
+            disabled={
+              !(
+                amount > 0 && // precisa ser maior que zero
+                (
+                  // se for venda → precisa ser menor ou igual ao saldo
+                  (!isBuyMode && amount <= userBalance)
+                )
+              )
+            }
             className={`flex-1 bg-gradient-to-r ${
               isBuyMode 
                 ? (product?.categoryColor === 'green' ? 'from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700' :
-                   product?.categoryColor === 'red' ? 'from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700' :
-                   'from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600')
+                  product?.categoryColor === 'red' ? 'from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700' :
+                  'from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600')
                 : 'from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700'
             } text-white transition-all duration-200`}
           >

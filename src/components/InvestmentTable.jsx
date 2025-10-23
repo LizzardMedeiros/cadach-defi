@@ -71,7 +71,7 @@ export default function InvestmentTable({
   rows = DATA,
   strategyFilter = null, // ← nome corrigido
   pageSize = 10,
-  onInvest = (row) => console.log("Investir em", row.estrategia),
+  onInvest = (row) => console.log("Investir em", row),
 }) {
   const [filteredRows, setFilteredRows] = useState(rows);
   const [page, setPage] = useState(1); // 1-based
@@ -151,10 +151,9 @@ export default function InvestmentTable({
     { id: "apy", label: "APY" },
     { id: "criadoPor", label: "Criado por" },
     { id: "risco", label: "Risco" },
-    { id: "invest", label: "Investir" },
   ];
 
-  const gridColsClass = "grid grid-cols-[26%_18%_12%_20%_10%_14%]";
+  const gridColsClass = "grid grid-cols-[40%_18%_12%_20%_10%]";
 
   const HeaderCell = ({ id, children }) => {
     const active = sortBy === id;
@@ -172,7 +171,7 @@ export default function InvestmentTable({
       <div
         role="columnheader"
         aria-sort={ariaSort}
-        className="px-4 py-3 text-sm font-medium text-gray-700 whitespace-nowrap"
+        className="px-4 py-3 text-sm font-medium text-gray-700 whitespace-nowrap max-w-screen"
       >
         {sortable ? (
           <button
@@ -233,7 +232,8 @@ export default function InvestmentTable({
                 <div
                   key={idx}
                   role="row"
-                  className={`${gridColsClass} items-center hover:bg-gray-200`}
+                  onClick={() => onInvest(r)}
+                  className={`${gridColsClass} items-center hover:bg-gray-200 cursor-pointer`}
                 >
                   <div role="cell" className="px-4 py-3 font-medium text-gray-800">
                     {r.estrategia}
@@ -249,14 +249,6 @@ export default function InvestmentTable({
                   </div>
                   <div role="cell" className="px-4 py-3">
                     <RiskBars value={r.risco} />
-                  </div>
-                  <div role="cell" className="px-4 py-3">
-                    <button
-                      onClick={() => onInvest(r)}
-                      className="text-sm font-medium text-purple-600 hover:text-purple-500 transition-colors"
-                    >
-                      Detalhes
-                    </button>
                   </div>
                 </div>
               ))

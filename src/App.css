@@ -76,6 +76,11 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
@@ -110,10 +115,53 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+html, body {
+  @apply w-full max-w-full overflow-x-hidden overscroll-x-none relative;
+}
+
+  html, body {
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+    overscroll-behavior: none;
+    overscroll-behavior-x: none;
+  }
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
+  html, body {
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+    overscroll-behavior: none;
+    overscroll-behavior-x: none;
+  }
+    html, body {
+    @apply w-full max-w-full overflow-x-hidden overscroll-x-none relative;
+  }
+
+    /* 2) Garante que a raiz do app não estoure */
+  #root {
+    @apply w-full max-w-full overflow-x-hidden;
+  }
+    /* 3) Boas práticas pra evitar “vazamentos” */
+  *, *::before, *::after { box-sizing: border-box; }
+
+    .no-x-scroll {
+    /* “clip” evita até a sombra da barra em alguns browsers */
+    overflow-x: clip; /* fallback melhor que hidden p/ mobile moderno */
+    max-width: 100%;
+  }
+
+  * {
+    box-sizing: border-box; /* evita overflow por padding/border */
+  }
+
+  #root { width: 100%; max-width: 100vw; overflow-x: hidden; }
+
   ::-webkit-scrollbar {
     width: 6px;      /* scroll vertical */
     height: 6px;     /* scroll horizontal */
