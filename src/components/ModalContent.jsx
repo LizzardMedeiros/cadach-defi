@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { TrendingUp, TrendingDown, DollarSign, Info, ArrowRightLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -131,22 +131,7 @@ export default function Content({
                   {amount.toFixed(2)} USDT
                 </span>
               </div>
-              {fees.transaction > 0 && (
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Taxa de transação ({fees.transaction}%):</span>
-                  <span className="font-medium text-gray-900">
-                    {totalFees.toFixed(2)} USDT
-                  </span>
-                </div>
-              )}
-              {fees.gas > 0 && (
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Taxa de gas (estimada):</span>
-                  <span className="font-medium text-gray-900">
-                    {fees.gas} USDT
-                  </span>
-                </div>
-              )}
+          
               <div className="pt-2 border-t border-gray-200">
                 <div className="flex justify-between">
                   <span className="text-gray-900 font-semibold">
