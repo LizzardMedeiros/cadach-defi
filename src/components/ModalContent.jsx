@@ -80,7 +80,7 @@ export default function Content({
               <button
                 type="button"
                 onClick={() => {
-                  setAmount(userBalance)
+                  setAmount(Number(userBalance))
                 }}
                 className="text-xs font-medium text-blue-600 hover:text-blue-700"
               >
