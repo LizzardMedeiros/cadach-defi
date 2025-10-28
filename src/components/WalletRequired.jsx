@@ -15,8 +15,6 @@ export default function WalletRequired() {
       <p className="text-gray-600 text-xl pb-10">
         Para acessar as funcionalidades, é necessário conectar uma carteira compatível com a rede {networkList[0].chainName || "Arbitrum"}.
       </p>
-
-
     </div>
   );
 }

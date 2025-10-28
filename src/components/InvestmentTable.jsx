@@ -1,4 +1,5 @@
 import { useMemo, useState, useEffect } from "react";
+import RiskMeter from "./ui/RiskMeter";
 
 /** Util: moeda BRL */
 const toBRL = (n) =>
@@ -6,74 +7,13 @@ const toBRL = (n) =>
     Number(n || 0)
   );
 
-/** Barras de risco roxas (1..4) estilo “sinal” */
-function RiskBars({ value = 1 }) {
-  const bars = [1, 2, 3, 4];
-  const safe = Math.max(0, Math.min(4, Number(value))); // clamp 0..4
-  const heights = ["h-2", "h-3", "h-4", "h-6"]; // crescente
-
-  return (
-    <div
-      className="flex items-end gap-1 h-6"
-      aria-label={`Risco ${safe} de 4`}
-      title={`Risco ${safe}/4`}
-    >
-      {bars.map((b, i) => (
-        <span
-          key={b}
-          className={[
-            "w-1.5 rounded-sm",
-            heights[i],
-            b <= safe
-              ? "bg-gradient-to-t from-purple-600 to-purple-400"
-              : "bg-purple-200/40 border border-purple-200",
-          ].join(" ")}
-        />
-      ))}
-      <span className="sr-only">{safe} de 4</span>
-    </div>
-  );
-}
-
-/** Dados de exemplo */
-const DATA = [
-  {
-    estrategia: "Blindando meu $",
-    total: 12500,
-    apy: 7.8,
-    criadoPor: "Equipe Cadach",
-    risco: 1,
-  },
-  {
-    estrategia: "Beta Moderado",
-    total: 32200.5,
-    apy: 14.2,
-    criadoPor: "Breno LG",
-    risco: 2,
-  },
-  {
-    estrategia: "Alpha Momentum",
-    total: 9800,
-    apy: 22.6,
-    criadoPor: "Desk Quant",
-    risco: 3,
-  },
-  {
-    estrategia: "Gamma DeFi+",
-    total: 48750,
-    apy: 31.1,
-    criadoPor: "DAO X",
-    risco: 4,
-  },
-];
-
 export default function InvestmentTable({
-  rows = DATA,
+  rows,
   strategyFilter = null, // ← nome corrigido
   pageSize = 10,
   onInvest = (row) => console.log("Investir em", row),
 }) {
-  const [filteredRows, setFilteredRows] = useState(rows);
+  const [filteredRows, setFilteredRows] = useState([]);
   const [page, setPage] = useState(1); // 1-based
   const [sortBy, setSortBy] = useState("estrategia"); // coluna
   const [sortDir, setSortDir] = useState("asc"); // 'asc' | 'desc'
@@ -81,11 +21,10 @@ export default function InvestmentTable({
   /** 🧠 useEffect — filtra conforme o risco (1–4) */
   useEffect(() => {
     if (strategyFilter && [1, 2, 3, 4].includes(Number(strategyFilter))) {
-      setFilteredRows(rows.filter((r) => Number(r.risco) === Number(strategyFilter)));
-      setPage(1); // volta pra primeira página ao filtrar
-    } else {
-      setFilteredRows(rows);
+      setFilteredRows(rows.filter((r) => Math.floor(r.risk / 10) === Number(strategyFilter)));
+      return setPage(1); // volta pra primeira página ao filtrar
     }
+    setFilteredRows(rows);
   }, [strategyFilter, rows]);
 
   // Acessores por coluna
@@ -153,7 +92,7 @@ export default function InvestmentTable({
     { id: "risco", label: "Risco" },
   ];
 
-  const gridColsClass = "grid grid-cols-[40%_18%_12%_20%_10%]";
+  const gridColsClass = "grid grid-cols-[35%_18%_12%_20%_15%]";
 
   const HeaderCell = ({ id, children }) => {
     const active = sortBy === id;
@@ -226,7 +165,7 @@ export default function InvestmentTable({
           </div>
 
           {/* Corpo */}
-          <div role="rowgroup" className="divide-y divide-gray-200">
+          <div role="rowgroup" className="divide-y divide-gray-200 w-full">
             {pageRows.length > 0 ? (
               pageRows.map((r, idx) => (
                 <div
@@ -236,19 +175,19 @@ export default function InvestmentTable({
                   className={`${gridColsClass} items-center hover:bg-gray-200 cursor-pointer`}
                 >
                   <div role="cell" className="px-4 py-3 font-medium text-gray-800">
-                    {r.estrategia}
+                    {r.name}
                   </div>
                   <div role="cell" className="px-4 py-3 tabular-nums">
-                    {toBRL(r.total)}
+                    {toBRL(r.tvl)}
                   </div>
                   <div role="cell" className="px-4 py-3 tabular-nums">
-                    {Number(r.apy).toFixed(2)}%
+                    {Number(r.currentReturn).toFixed(2)}%
                   </div>
                   <div role="cell" className="px-4 py-3 text-gray-800">
-                    {r.criadoPor}
+                    {r.featured}
                   </div>
-                  <div role="cell" className="px-4 py-3">
-                    <RiskBars value={r.risco} />
+                  <div role="cell" className="px-4 py-2 min-w-[160px] w-full">
+                    <RiskMeter value={r.risk} />
                   </div>
                 </div>
               ))

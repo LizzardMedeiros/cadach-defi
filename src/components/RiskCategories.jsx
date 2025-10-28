@@ -46,13 +46,13 @@ export default function RiskCategories({ setStrategyFilter }) {
       id: 'agressivo',
       name: 'Agressivo',
       icon: Rocket,
-      color: 'red',
+      color: 'orange',
       risco: 3,
-      gradient: 'from-red-500 to-pink-600',
-      bgColor: 'bg-red-50',
-      borderColor: 'border-red-200',
-      textColor: 'text-red-700',
-      returnRange: '15-25%+',
+      gradient: 'from-orange-500 to-pink-600',
+      bgColor: 'bg-orange-50',
+      borderColor: 'border-orange-200',
+      textColor: 'text-orange-700',
+      returnRange: '15-25%',
       description: 'Maior potencial de retorno para investidores experientes',
       features: [
         'Protocolos de alto rendimento',
@@ -61,23 +61,23 @@ export default function RiskCategories({ setStrategyFilter }) {
       ]
     },
     {
-      id: 'agresddsivo',
-      name: 'Agressivo',
+      id: 'visionario',
+      name: 'Visionário',
       icon: Rocket,
       color: 'red',
-      risco: 4,
-      gradient: 'from-red-500 to-pink-600',
+      risco: 3,
+      gradient: 'from-pink-500 to-red-600',
       bgColor: 'bg-red-50',
       borderColor: 'border-red-200',
       textColor: 'text-red-700',
-      returnRange: '15-25%+',
+      returnRange: '25%+',
       description: 'Maior potencial de retorno para investidores experientes',
       features: [
         'Protocolos de alto rendimento',
         'Estratégias avançadas de DeFi',
         'Maior volatilidade e potencial'
       ]
-    }
+    },
   ]
 
   const handleCategoryClick = (categoryId) => {

@@ -3,6 +3,8 @@ import { ethers } from 'ethers'
 import { Button } from '@/components/ui/button'
 import Modal from '@/components/Modal';
 import ModalContent from '@/components/ModalContent';
+import InvestmentTable from '@/components/InvestmentTable'
+import RiskCategories from '@/components/RiskCategories'
 import * as Icons from 'lucide-react'
 import useEthereum from '@/hooks/use-ethereum'
 import strategyList from '@/strategies.json'
@@ -12,6 +14,7 @@ import strategyList from '@/strategies.json'
 export default function FeaturedProducts({ signer }) {
   const [products, setProducts] = useState([])
   const [selectedProduct, setSelectedProduct] = useState(null)
+  const [strategyFilter, setStrategyFilter] = useState(null);
   const [modal, setModal] = useState();
   const [productDetails, setProductDetails] = useState({})
   const [error, setError] = useState(null);
@@ -36,8 +39,8 @@ export default function FeaturedProducts({ signer }) {
       .then(() => {
         const keys = [
           'net', 'id', 'name', 'category', 'categoryColor', 'icon', 'currentReturn',
-          'description', 'longDescription', 'tvl', 'investors', 'composition',
-          'risks', 'features',
+          'description', 'longDescription', 'tvl', 'investors', 'composition', 'risk',
+          'risks', 'features', 'featured',
         ];
         const p = strategyList.map(
           (data) => Object.fromEntries(data.map((el, i) => [keys[i], el]))
@@ -70,8 +73,7 @@ export default function FeaturedProducts({ signer }) {
     setSelectedProduct(productId);
     setModal('buy');
   }
-  const onClose = () => {setError(null); setModal(); setSelectedProduct(null);}
-  //Perguntar se o onClose LUIS
+  const onClose = () => { setError(null); setModal(); setSelectedProduct(null); }
 
   const handleSubmit = async ({ amount, mode }) => {
     if (!selectedProduct || amount <= 0) return;
@@ -113,259 +115,270 @@ export default function FeaturedProducts({ signer }) {
   }
 
   return (
-    <section className="py-10 bg-white md:py-20 max-w-screen" id="strategies">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <div className="flex items-center justify-center space-x-2 mb-4">
-            <Icons.Star className="w-6 h-6 text-yellow-500" />
-            <span className="text-sm font-semibold text-gray-600 uppercase tracking-wide">
-              Produtos em Destaque
-            </span>
+    <>
+      <RiskCategories setStrategyFilter={setStrategyFilter} />
+      <InvestmentTable rows={products} strategyFilter={strategyFilter} />
+      <section className="py-10 bg-white md:py-20 max-w-screen" id="strategies">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <div className="flex items-center justify-center space-x-2 mb-4">
+              <Icons.Star className="w-6 h-6 text-yellow-500" />
+              <span className="text-sm font-semibold text-gray-600 uppercase tracking-wide">
+                Produtos em Destaque
+              </span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+              Estratégias mais populares
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Conheça as estratégias que estão gerando os melhores resultados para nossos investidores
+            </p>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-            Estratégias mais populares
-          </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Conheça as estratégias que estão gerando os melhores resultados para nossos investidores
-          </p>
-        </div>
 
-        <div className={`grid lg:grid-cols-${Math.min(products.length, 2)} gap-8 max-w-6xl mx-auto`}>
-          {products.map((product) => {
-            const IconComponent = Icons[product.icon]
-            const isSelected = selectedProduct === product.id
-            
-            return (
-              <div
-                key={product.id}
-                className={`bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden ${
-                  isSelected ? 'ring-2 ring-blue-500 ring-offset-2' : ''
-                }`}
-              >
-                {/* Product Header */}
-                <div className="p-8 max-[450px]:p-6">
-                  <div className="flex items-start justify-between mb-6 gap-2 max-[350px]:mb-3">
-                    <div className="flex items-top space-x-4">
-                      <div className={`p-3 rounded-xl bg-gradient-to-r h-fit mt-1.5 ${
-                        product.categoryColor === 'green' ? 'from-green-500 to-emerald-600' :
-                        product.categoryColor === 'red' ? 'from-red-500 to-pink-600' :
-                        'from-yellow-500 to-orange-500'
-                      } text-white`}>
-                        <IconComponent className="w-6 h-6" />
+          <div className={`grid lg:grid-cols-${Math.min(products.length, 2)} gap-8 max-w-6xl mx-auto`}>
+            {products.map((product) => {
+              const IconComponent = Icons[product.icon]
+              const isSelected = selectedProduct === product.id
+              
+              return (
+                <div
+                  key={product.id}
+                  className={`bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden ${
+                    isSelected ? 'ring-2 ring-blue-500 ring-offset-2' : ''
+                  }`}
+                >
+                  {/* Product Header */}
+                  <div className="p-8 max-[450px]:p-6">
+                    <div className="flex items-start justify-between mb-6 gap-2 max-[350px]:mb-3">
+                      <div className="flex items-top space-x-4">
+                        <div className={`p-3 rounded-xl bg-gradient-to-r h-fit mt-1.5 ${
+                          product.categoryColor === 'green' ? 'from-green-500 to-emerald-600' :
+                          product.categoryColor === 'red' ? 'from-red-500 to-pink-600' :
+                          'from-yellow-500 to-orange-500'
+                        } text-white`}>
+                          <IconComponent className="w-6 h-6" />
+                        </div>
+                        <div>
+                          <h3 className="text-base font-bold text-gray-900 mb-1 sm:text-xl">
+                            {product.name}
+                          </h3>
+                          {
+                            product.category.map(([label, c], i) => (
+                              <span
+                                className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border  max-[500px]:hidden ${getCategoryBadgeColor(c || product.categoryColor)}`}
+                                key={`cat-${i}`}
+                              >
+                                {label}
+                              </span>
+                            ))
+                          }
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="text-base font-bold text-gray-900 mb-1 sm:text-xl">
-                          {product.name}
-                        </h3>
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border  max-[500px]:hidden ${getCategoryBadgeColor(product.categoryColor)}`}>
-                          {product.category}
-                        </span>
+                      <div className="text-right">
+                        <div className="flex items-center space-x-1 text-green-600 mb-1">
+                          <Icons.TrendingUp className="w-4 h-4" />
+                          <span className="text-base font-bold sm:text-2xl">{product.currentReturn}%</span>
+                        </div>
+                        <span className="hidden text-sm text-gray-500 sm:visible">ao ano</span>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <div className="flex items-center space-x-1 text-green-600 mb-1">
-                        <Icons.TrendingUp className="w-4 h-4" />
-                        <span className="text-base font-bold sm:text-2xl">{product.currentReturn}%</span>
-                      </div>
-                      <span className="hidden text-sm text-gray-500 sm:visible">ao ano</span>
-                    </div>
-                  </div>
-                  {/* Category Badge for small screens */}
-                  <p 
-                    className={`visible items-center px-2.5 py-0.5 rounded-full text-xs font-medium border
-                    mb-6 max-w-[50%] mx-auto text-center
-                    min-[501px]:hidden ${getCategoryBadgeColor(product.categoryColor)}`}
-                  >
-                    {product.category}
-                  </p>
-
-                  {/* Description */}
-                  <p className="text-gray-600 mb-6 leading-relaxed">
-                    {product.description}
-                  </p>
-
-                  {/* Stats */}
-                  <div className="grid grid-cols-2 gap-4 mb-6">
-
-                    <div className="bg-gray-50 rounded-lg p-4 text-center">
-                      <div className="flex items-center justify-center space-x-2 mb-1">
-                        <Icons.DollarSign className="w-4 h-4 text-gray-600" />
-                        <span className="text-lg font-bold text-gray-900">{product.tvl}</span>
-                      </div>
-                      <span className="text-sm text-gray-500">Total Investido</span>
-                    </div>
-
-                    <div className="bg-gray-50 rounded-lg p-4 text-center">
-                      <div className="flex items-center justify-center space-x-2 mb-1">
-                        <Icons.Users className="w-4 h-4 text-gray-600" />
-                        <span className="text-lg font-bold text-gray-900">{product.investors}</span>
-                      </div>
-                      <span className="text-sm text-gray-500">Investidores</span>
-                    </div>
-
-                  </div>
-
-                  {/* Action Buttons */}
-                  <div className="flex space-x-3 flex-wrap gap-3">
-                    <Button 
-                      variant="outline" 
-                      className="flex-1"
-                      onClick={() => handleProductClick(product.id)}
+                    {/* Category Badge for small screens */}
+                    <p 
+                      className={`visible items-center px-2.5 py-0.5 rounded-full text-xs font-medium border
+                      mb-6 max-w-[50%] mx-auto text-center
+                      min-[501px]:hidden ${getCategoryBadgeColor(product.categoryColor)}`}
                     >
-                      <Icons.Info className="w-4 h-4 mr-2" />
-                      {isSelected ? 'Menos detalhes' : 'Ver detalhes'}
-                    </Button>
-                    <Button 
-                      className={`flex-1 bg-gradient-to-r ${
-                        product.categoryColor === 'green' ? 'from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700' :
-                        product.categoryColor === 'red' ? 'from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700' :
-                        'from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600'
-                      } text-white`}
-                      disabled={!signer?.address}
-                      onClick={() => handleInvest(product.id)}
-                    >
-                      Investir agora
-                    </Button>
+                      {product.category}
+                    </p>
+
+                    {/* Description */}
+                    <p className="text-gray-600 mb-6 leading-relaxed">
+                      {product.description}
+                    </p>
+
+                    {/* Stats */}
+                    <div className="grid grid-cols-2 gap-4 mb-6">
+
+                      <div className="bg-gray-50 rounded-lg p-4 text-center">
+                        <div className="flex items-center justify-center space-x-2 mb-1">
+                          <Icons.DollarSign className="w-4 h-4 text-gray-600" />
+                          <span className="text-lg font-bold text-gray-900">{product.tvl}</span>
+                        </div>
+                        <span className="text-sm text-gray-500">Total Investido</span>
+                      </div>
+
+                      <div className="bg-gray-50 rounded-lg p-4 text-center">
+                        <div className="flex items-center justify-center space-x-2 mb-1">
+                          <Icons.Users className="w-4 h-4 text-gray-600" />
+                          <span className="text-lg font-bold text-gray-900">{product.investors}</span>
+                        </div>
+                        <span className="text-sm text-gray-500">Investidores</span>
+                      </div>
+
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex space-x-3 flex-wrap gap-3">
+                      <Button 
+                        variant="outline" 
+                        className="flex-1"
+                        onClick={() => handleProductClick(product.id)}
+                      >
+                        <Icons.Info className="w-4 h-4 mr-2" />
+                        {isSelected ? 'Menos detalhes' : 'Ver detalhes'}
+                      </Button>
+                      <Button 
+                        className={`flex-1 bg-gradient-to-r ${
+                          product.categoryColor === 'green' ? 'from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700' :
+                          product.categoryColor === 'red' ? 'from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700' :
+                          'from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600'
+                        } text-white`}
+                        disabled={!signer?.address}
+                        onClick={() => handleInvest(product.id)}
+                      >
+                        Investir agora
+                      </Button>
+                    </div>
                   </div>
+
+                  {/* Expanded Details */}
+                  {isSelected && (
+                    <div className="border-t bg-gray-50 p-8 max-[450px]:p-6">
+
+                      <div className="grid grid-cols-3 gap-4 mb-6 max-[510px]:flex max-[510px]:flex-col max-[510px]:gap-3">
+
+                        <div className="bg-white rounded-lg p-4 text-center">
+                          <div className="flex items-center justify-center space-x-2 mb-1">
+                            <Icons.DollarSign className="w-4 h-4 text-gray-600" />
+                            <span className="text-base font-bold text-gray-900 sm:text-lg">
+                              {productDetails.available || 0}
+                            </span>
+                          </div>
+                          <span className="text-sm text-gray-500">Disponível para investir</span>
+                        </div>
+
+                        <div className="bg-white rounded-lg p-4 text-center">
+                          <div className="flex items-center justify-center space-x-2 mb-1">
+                            <Icons.DollarSign className="w-4 h-4 text-gray-600" />
+                            <span className="text-base font-bold text-gray-900 sm:text-lg">
+                              {productDetails.yield || 0}
+                            </span>
+                          </div>
+                          <span className="text-sm text-gray-500">Recompensas</span>
+                        </div>
+
+                        <div className="bg-white rounded-lg p-4 text-center">
+                          <div className="flex items-center justify-center space-x-2 mb-1">
+                            <Icons.DollarSign className="w-4 h-4 text-gray-600" />
+                            <span className="text-base font-bold text-gray-900 sm:text-lg">
+                              {productDetails.balance || 0}
+                            </span>
+                          </div>
+                          <span className="text-sm text-gray-500">Capital investido</span>
+                        </div>
+
+                      </div>
+
+                      <div className="flex justify-center pb-2  flex-wrap gap-3">
+                    
+                        <Button
+                          className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
+                          onClick={() => setModal('sell')}
+                        >
+                          <Icons.DollarSign className="w-4 h-4 mr-2" />
+                          Resgatar patrimônio
+                        </Button>
+
+                        <Button
+                          className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
+                          onClick={() => {
+                            send(signer, product.id, 'withdrawYields', 'STRATEGY')
+                          }}
+                        >
+                          <Icons.DollarSign className="w-4 h-4 mr-2" />
+                          Resgatar ganhos
+                        </Button>
+                      </div>
+
+                      <div className="space-y-6">
+                        {/* Long Description */}
+                        <div>
+                          <h4 className="font-semibold text-gray-900 mb-2">Sobre a estratégia</h4>
+                          <p className="text-gray-600 text-sm leading-relaxed">
+                            {product.longDescription}
+                          </p>
+                        </div>
+
+                        {/* Composition */}
+                        <div>
+                          <h4 className="font-semibold text-gray-900 mb-3">Composição</h4>
+                          <div className="space-y-2">
+                            {product.composition.map(([name, percent, color], index) => (
+                              <div key={index} className="flex items-center space-x-3">
+                                <div className={`w-3 h-3 rounded-full ${color}`}></div>
+                                <span className="text-sm text-gray-600 flex-1">{name}</span>
+                                <span className="text-sm font-semibold text-gray-900">{percent}%</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Features and Risks */}
+                        <div className="grid md:grid-cols-2 gap-6">
+                          <div>
+                            <h4 className="font-semibold text-gray-900 mb-3">Principais recursos</h4>
+                            <ul className="space-y-2">
+                              {product.features.map((feature, index) => (
+                                <li key={index} className="flex items-start space-x-2">
+                                  <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                                  <span className="text-sm text-gray-600">{feature}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                          <div>
+                            <h4 className="font-semibold text-gray-900 mb-3">Principais riscos</h4>
+                            <ul className="space-y-2">
+                              {product.risks.map((risk, index) => (
+                                <li key={index} className="flex items-start space-x-2">
+                                  <div className="w-2 h-2 bg-red-500 rounded-full mt-2 flex-shrink-0"></div>
+                                  <span className="text-sm text-gray-600">{risk}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
+              )
+            })}
+          </div>
 
-                {/* Expanded Details */}
-                {isSelected && (
-                  <div className="border-t bg-gray-50 p-8 max-[450px]:p-6">
-
-                    <div className="grid grid-cols-3 gap-4 mb-6 max-[510px]:flex max-[510px]:flex-col max-[510px]:gap-3">
-
-                      <div className="bg-white rounded-lg p-4 text-center">
-                        <div className="flex items-center justify-center space-x-2 mb-1">
-                          <Icons.DollarSign className="w-4 h-4 text-gray-600" />
-                          <span className="text-base font-bold text-gray-900 sm:text-lg">
-                            {productDetails.available || 0}
-                          </span>
-                        </div>
-                        <span className="text-sm text-gray-500">Disponível para investir</span>
-                      </div>
-
-                      <div className="bg-white rounded-lg p-4 text-center">
-                        <div className="flex items-center justify-center space-x-2 mb-1">
-                          <Icons.DollarSign className="w-4 h-4 text-gray-600" />
-                          <span className="text-base font-bold text-gray-900 sm:text-lg">
-                            {productDetails.yield || 0}
-                          </span>
-                        </div>
-                        <span className="text-sm text-gray-500">Recompensas</span>
-                      </div>
-
-                      <div className="bg-white rounded-lg p-4 text-center">
-                        <div className="flex items-center justify-center space-x-2 mb-1">
-                          <Icons.DollarSign className="w-4 h-4 text-gray-600" />
-                          <span className="text-base font-bold text-gray-900 sm:text-lg">
-                            {productDetails.balance || 0}
-                          </span>
-                        </div>
-                        <span className="text-sm text-gray-500">Capital investido</span>
-                      </div>
-
-                    </div>
-
-                    <div className="flex justify-center pb-2  flex-wrap gap-3">
-                  
-                      <Button
-                        className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
-                        onClick={() => setModal('sell')}
-                      >
-                        <Icons.DollarSign className="w-4 h-4 mr-2" />
-                        Resgatar patrimônio
-                      </Button>
-
-                      <Button
-                        className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
-                        onClick={() => {
-                          send(signer, product.id, 'withdrawYields', 'STRATEGY')
-                        }}
-                      >
-                        <Icons.DollarSign className="w-4 h-4 mr-2" />
-                        Resgatar ganhos
-                      </Button>
-                    </div>
-
-                    <div className="space-y-6">
-                      {/* Long Description */}
-                      <div>
-                        <h4 className="font-semibold text-gray-900 mb-2">Sobre a estratégia</h4>
-                        <p className="text-gray-600 text-sm leading-relaxed">
-                          {product.longDescription}
-                        </p>
-                      </div>
-
-                      {/* Composition */}
-                      <div>
-                        <h4 className="font-semibold text-gray-900 mb-3">Composição</h4>
-                        <div className="space-y-2">
-                          {product.composition.map(([name, percent, color], index) => (
-                            <div key={index} className="flex items-center space-x-3">
-                              <div className={`w-3 h-3 rounded-full ${color}`}></div>
-                              <span className="text-sm text-gray-600 flex-1">{name}</span>
-                              <span className="text-sm font-semibold text-gray-900">{percent}%</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Features and Risks */}
-                      <div className="grid md:grid-cols-2 gap-6">
-                        <div>
-                          <h4 className="font-semibold text-gray-900 mb-3">Principais recursos</h4>
-                          <ul className="space-y-2">
-                            {product.features.map((feature, index) => (
-                              <li key={index} className="flex items-start space-x-2">
-                                <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                                <span className="text-sm text-gray-600">{feature}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                        <div>
-                          <h4 className="font-semibold text-gray-900 mb-3">Principais riscos</h4>
-                          <ul className="space-y-2">
-                            {product.risks.map((risk, index) => (
-                              <li key={index} className="flex items-start space-x-2">
-                                <div className="w-2 h-2 bg-red-500 rounded-full mt-2 flex-shrink-0"></div>
-                                <span className="text-sm text-gray-600">{risk}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )
-          })}
+          {/* Bottom CTA */}
+          <div className="text-center mt-16">
+            <p className="text-gray-600 mb-6">
+              Quer ver todas as estratégias disponíveis?
+            </p>
+            <Button size="lg" variant="outline" className="rounded-full">
+              Ver todas as estratégias
+            </Button>
+          </div>
         </div>
-
-        {/* Bottom CTA */}
-        <div className="text-center mt-16">
-          <p className="text-gray-600 mb-6">
-            Quer ver todas as estratégias disponíveis?
-          </p>
-          <Button size="lg" variant="outline" className="rounded-full">
-            Ver todas as estratégias
-          </Button>
-        </div>
-      </div>
-      <Modal isOpen={!!modal} onClose={() => {setError(null); setModal(); setSelectedProduct(null);}}>
-        <ModalContent
-          product={products.find((p) => p.id === selectedProduct)}
-          mode={modal}
-          userBalance={productDetails.balance}
-          onClose={() => setModal()}
-          onSubmit={handleSubmit}
-          error={error}
-          setError={setError}
-        />
-      </Modal>
-    </section>
+        <Modal isOpen={!!modal} onClose={() => {setError(null); setModal(); setSelectedProduct(null);}}>
+          <ModalContent
+            product={products.find((p) => p.id === selectedProduct)}
+            mode={modal}
+            userBalance={productDetails.balance}
+            onClose={() => setModal()}
+            onSubmit={handleSubmit}
+            error={error}
+            setError={setError}
+          />
+        </Modal>
+      </section>
+    </>
   )
 }
 

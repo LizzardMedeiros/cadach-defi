@@ -3,7 +3,7 @@
     "arbitrum",
     "0x4cdBD464A1fC138F8a2741DFEf57153934bcbeBd",
     "Estratégia - Renda em dólar",
-    "Baixo Risco",
+    [["Baixo Risco"], ["USDT", "blue"]],
     "green",
     "Shield",
     0,
@@ -12,7 +12,9 @@
     0,
     0,
     [["AAVE Pool", 100, "bg-green-500"]],
+    16,
     ["Risco de smart contract", "Volatilidade do preço do dólar"],
-    ["Auditado por empresas de segurança","Rebalanceamento automático","Saque a qualquer momento"]
+    ["Auditado por empresas de segurança","Rebalanceamento automático","Saque a qualquer momento"],
+    "Equipe Cadach"
   ]
 ]

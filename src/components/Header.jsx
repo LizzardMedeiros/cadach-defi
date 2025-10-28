@@ -137,7 +137,7 @@ export default function Header({ setSigner = () => null, signer }) {
                 `transition-colors text-gray-600 hover:text-gray-900`
               }
             >
-              Tokens
+              Oferta de Tokens
             </NavLink>
               <a href="#estrategias" className="text-gray-600 hover:text-gray-900 transition-colors">
                 Estratégias
